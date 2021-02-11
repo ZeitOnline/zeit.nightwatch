@@ -17,6 +17,10 @@ setup(
     zip_safe=False,
     license='GPL v2',
     install_requires=[
+        'cssselect',
+        'lxml',
+        'mechanicalsoup',
+        'requests',
         'pytest',
         'setuptools',
     ],
