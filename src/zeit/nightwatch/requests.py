@@ -44,6 +44,7 @@ class Browser(mechanicalsoup.StatefulBrowser):
     def __init__(self, baseurl=None, sso_url=None, *args, **kw):
         self.baseurl = baseurl
         self.sso_url = sso_url
+        kw.setdefault('session', HeaderPrintingSession())
         super().__init__(*args, **kw)
 
     @property
@@ -75,7 +76,6 @@ class Browser(mechanicalsoup.StatefulBrowser):
     def request(self, method, url, *args, **kw):
         if url.startswith('/') and self.baseurl:
             url = self.baseurl + url
-        log.info('%s %s', method.upper(), url)
         r = self.session.request(method, url, *args, **kw)
         # Taken from StatefulBrowser.open()
         self._StatefulBrowser__state = LazySoupBrowserState(
@@ -132,3 +132,20 @@ class LazySoupBrowserState(_BrowserState):
     @page.setter
     def page(self, value):
         pass
+
+
+class HeaderPrintingSession(requests.Session):
+    """Prints request+response headers, to help understanding test failures."""
+
+    def request(self, method, url, *args, **kw):
+        log.info('> %s %s', method.upper(), url)
+        response = super().request(method, url, *args, **kw)
+        request = response.request
+        lines = ['< %s %s' % (request.method, request.url)]
+        lines.extend(['> %s: %s' % x for x in request.headers.items()])
+        lines.append('---')
+        resp = {'Status': response.status_code}
+        resp.update(response.headers)
+        lines.extend(['< %s: %s' % x for x in resp.items()])
+        log.info('\n'.join(lines))
+        return response
