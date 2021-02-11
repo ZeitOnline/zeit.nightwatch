@@ -1,3 +1,4 @@
+import logging
 import pytest
 
 
@@ -19,3 +20,9 @@ def zeitde(nightwatch_environment):
         return lambda x: 'https://%s.zeit.de' % x
     else:
         return lambda x: 'https://%s.%s.zeit.de' % (x, nightwatch_environment)
+
+
+def pytest_configure(config):
+    logging.getLogger().setLevel(logging.INFO)
+    config.inicfg['log_format'] = (
+        '%(asctime)s %(levelname)-5.5s [%(name)s][%(threadName)s] %(message)s')
