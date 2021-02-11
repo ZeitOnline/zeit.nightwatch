@@ -22,6 +22,7 @@ setup(
         'mechanicalsoup',
         'requests',
         'pytest',
+        'pytest-prometheus',
         'selenium',
         'setuptools',
     ],
