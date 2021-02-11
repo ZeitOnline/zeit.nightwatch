@@ -2,7 +2,7 @@ zeit.nightwatch changes
 =======================
 
 
-1.0.0 (unreleased)
+1.0.0 (2021-02-11)
 ------------------
 
 - Initial release
