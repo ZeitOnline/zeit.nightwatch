@@ -22,6 +22,7 @@ setup(
         'mechanicalsoup',
         'requests',
         'pytest',
+        'selenium',
         'setuptools',
     ],
     entry_points={
