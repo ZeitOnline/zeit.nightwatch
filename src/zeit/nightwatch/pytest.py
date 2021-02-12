@@ -15,6 +15,7 @@ def pytest_addoption(parser):
 
 @pytest.fixture(scope='session')
 def nightwatch():
+    """Convenience fixture to quickly access the nightwatch modules"""
     import zeit.nightwatch
     return zeit.nightwatch
 
