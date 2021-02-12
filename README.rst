@@ -1,4 +1,5 @@
-`Tests badge <https://github.com/ZeitOnline/zeit.nightwatch/workflows/Run%20tests/badge.svg>`_
+.. image:: https://github.com/ZeitOnline/zeit.nightwatch/workflows/Run%20tests/badge.svg>
+   :alt: Test status badge
 
 
 ===============
