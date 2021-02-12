@@ -65,5 +65,5 @@ def pytest_collection_modifyitems(items):
     `-m 'not selenium'`. (The fixture must be provided by the client project.)
     """
     for item in items:
-        if 'selenium' in item.fixturenames:
+        if 'selenium' in getattr(item, 'fixturenames', []):
             item.add_marker(pytest.mark.selenium)
