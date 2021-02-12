@@ -5,6 +5,9 @@ zeit.nightwatch changes
 1.1.0 (unreleased)
 ------------------
 
+- Include prometheus functionality here, to fix pushgateway bug
+  and support sending the test name as a label.
+
 - Declare namespace package properly
 
 
