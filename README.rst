@@ -1,3 +1,6 @@
+`Tests badge <https://github.com/ZeitOnline/zeit.nightwatch/workflows/Run%20tests/badge.svg>`_
+
+
 ===============
 zeit.nightwatch
 ===============
