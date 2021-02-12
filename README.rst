@@ -148,17 +148,16 @@ Like the medieval night watch people who made the rounds checking that doors wer
 our use case for this library is continuous black box high-level tests that check that main functional areas of our systems are working.
 
 For this purpose, we want to integrate the test results with our monitoring system, which is based on `Prometheus <https://prometheus.io>`_.
-We use the `pytest-prometheus <https://pypi.org/project/pytest-prometheus/>`_ plugin, and preconfigure it with sensible defaults.
-
-Clients only have to set the job name, like this::
-
-    @pytest.hookimpl(tryfirst=True)  # run before pytest-prometheus to configure it
-    def pytest_configure(config):
-        config.option.prometheus_job_name = 'website'
+We've taken inspiration from the `pytest-prometheus <https://pypi.org/project/pytest-prometheus/>`_ plugin, and tweaked it a little to use a stable metric name, so we can write a generic alerting rule.
 
 This uses the configured `Pushgateway <https://prometheus.io/docs/practices/pushing/>`_ to record metrics like this (the ``environment`` label is populated from ``--nightwatch-environment``, see above)::
 
-    nightwatch_test_error_page_contains_home_link{environment="staging",job="website"}=1  # pass=1, fail=0
+    nightwatch_check{test="test_error_page_contains_home_link",environment="staging",job="website"}=1  # pass=1, fail=0
 
+Clients should set the job name, e.g. like this::
+
+    def pytest_configure(config):
+        config.option.prometheus_job_name = 'website'
 
 This functionality is disabled by default, nightwatch declares a pytest commandline option ``--prometheus`` which has to be present to enable pushing the metrics.
+There also are commandline options to override the pushgateway url etc., please see the source code for those details.

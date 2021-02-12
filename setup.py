@@ -3,13 +3,14 @@ from setuptools import setup, find_packages
 
 setup(
     name='zeit.nightwatch',
-    version='1.1.0.dev0',
+    version='1.2.0.dev0',
     author='Zeit Online',
     author_email='zon-backend@zeit.de',
     url='https://github.com/ZeitOnline/zeit.nightwatch',
     description='pytest helpers for http smoke tests',
     long_description='\n\n'.join(
         open(x).read() for x in ['README.rst', 'CHANGES.txt']),
+    namespace_packages=['zeit'],
     packages=find_packages('src'),
     package_dir={'': 'src'},
     include_package_data=True,
@@ -20,8 +21,8 @@ setup(
         'lxml',
         'mechanicalsoup',
         'requests',
+        'prometheus_client',
         'pytest',
-        'pytest-prometheus',
         'selenium',
         'setuptools',
     ],

@@ -1,5 +1,6 @@
 import logging
 import pytest
+import zeit.nightwatch.prometheus
 
 
 def pytest_addoption(parser):
@@ -9,9 +10,7 @@ def pytest_addoption(parser):
     parser.addoption(
         '--selenium-visible', action='store_true', default=False,
         help='Show selenium browser when running tests')
-    parser.addoption(
-        '--prometheus', action='store_true', default=False,
-        help='Send metrics to prometheus')
+    zeit.nightwatch.prometheus.addoption(parser)
 
 
 @pytest.fixture(scope='session')
@@ -34,7 +33,6 @@ def zeitde(nightwatch_environment):
         return lambda x: 'https://%s.%s.zeit.de' % (x, nightwatch_environment)
 
 
-@pytest.hookimpl(tryfirst=True)  # run before pytest-prometheus to configure it
 def pytest_configure(config):
     logging.getLogger().setLevel(logging.INFO)
     config.inicfg['log_format'] = (
@@ -43,27 +41,11 @@ def pytest_configure(config):
     config.addinivalue_line(
         'markers', 'selenium: Selenium test (helper for test selection)')
 
-    configure_prometheus(config)
+    zeit.nightwatch.prometheus.configure(config)
 
 
-def configure_prometheus(config):
-    if not config.getoption('--prometheus'):
-        config.option.prometheus_pushgateway_url = None  # disables reporting
-        return
-
-    # Set sensible defaults
-    if not config.option.prometheus_pushgateway_url:
-        config.option.prometheus_pushgateway_url = (
-            'https://prometheus-pushgw.ops.zeit.de')
-    if not config.option.prometheus_metric_prefix:
-        config.option.prometheus_metric_prefix = 'nightwatch_'
-    if not config.option.prometheus_job_name:
-        config.option.prometheus_job_name = 'unknown'
-
-    if config.option.prometheus_extra_label is None:
-        config.option.prometheus_extra_label = []
-    config.option.prometheus_extra_label.append(
-        'environment=%s' % config.getoption('--nightwatch-environment'))
+def pytest_unconfigure(config):
+    zeit.nightwatch.prometheus.unconfigure(config)
 
 
 def pytest_collection_modifyitems(items):

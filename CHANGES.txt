@@ -2,10 +2,19 @@ zeit.nightwatch changes
 =======================
 
 
-1.1.0 (unreleased)
+1.2.0 (unreleased)
 ------------------
 
 - Nothing changed yet.
+
+
+1.1.0 (2021-02-12)
+------------------
+
+- Include prometheus functionality here, to fix pushgateway bug
+  and support sending the test name as a label.
+
+- Declare namespace package properly
 
 
 1.0.0 (2021-02-11)
