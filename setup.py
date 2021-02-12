@@ -10,6 +10,7 @@ setup(
     description='pytest helpers for http smoke tests',
     long_description='\n\n'.join(
         open(x).read() for x in ['README.rst', 'CHANGES.txt']),
+    namespace_packages=['zeit'],
     packages=find_packages('src'),
     package_dir={'': 'src'},
     include_package_data=True,

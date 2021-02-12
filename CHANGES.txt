@@ -5,7 +5,7 @@ zeit.nightwatch changes
 1.1.0 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Declare namespace package properly
 
 
 1.0.0 (2021-02-11)
