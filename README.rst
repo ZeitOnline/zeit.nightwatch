@@ -25,8 +25,8 @@ Making HTTP requests
 Example usage::
 
     @pytest.fixture
-    def http():
-        return zeit.nightwatch.requests.Browser('https://example.com')
+    def http(nightwatch):
+        return nightwatch.requests.Browser('https://example.com')
 
     def test_my_site(http):
         r = http.get('/something')
@@ -40,8 +40,8 @@ Example usage::
         r = http.submit()
         assert '/home' in r.url
 
-    def test_meinezeit_redirects_to_konto_after_login():
-        http = zeit.nightwatch.requests.Browser(sso_url='https://meine.zeit.de/anmelden')
+    def test_meinezeit_redirects_to_konto_after_login(nightwatch):
+        http = nightwatch.requests.Browser(sso_url='https://meine.zeit.de/anmelden')
         r = http.sso_login('joe@example.com', 'secret')
         assert r.url == 'https://www.zeit.de/konto'
 
@@ -82,8 +82,8 @@ Since you'll probably want to set a base url, you have to provide this fixture y
 Example usage::
 
     @pytest.fixture(scope='session')
-    def selenium_session(request):
-        browser = zeit.nightwatch.selenium.WebDriverChrome(
+    def selenium_session(request, nightwatch):
+        browser = nightwatch.selenium.WebDriverChrome(
             'https://example.com',
             headless=not request.config.getoption('--selenium-visible'))
         yield browser
@@ -131,8 +131,8 @@ A pattern we found helpful is using a fixture to provide environment-specific se
         return config
 
     @pytest.fixture
-    def http(config):
-        return zeit.nightwatch.requests.Browser(config['base_url'])
+    def http(config, nightwatch):
+        return nightwatch.requests.Browser(config['base_url'])
 
     def test_some_integration_that_has_no_staging(http, config):
         if config['environment'] != 'production':
