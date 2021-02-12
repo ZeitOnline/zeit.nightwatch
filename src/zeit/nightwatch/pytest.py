@@ -15,6 +15,12 @@ def pytest_addoption(parser):
 
 
 @pytest.fixture(scope='session')
+def nightwatch():
+    import zeit.nightwatch
+    return zeit.nightwatch
+
+
+@pytest.fixture(scope='session')
 def nightwatch_environment(request):  # convenience spelling
     """Run tests against this environment (staging, production, etc.)"""
     return request.config.getoption('--nightwatch-environment')

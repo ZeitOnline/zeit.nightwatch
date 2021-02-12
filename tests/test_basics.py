@@ -1,10 +1,9 @@
 import pytest
-import zeit.nightwatch
 
 
 @pytest.fixture
-def http():
-    return zeit.nightwatch.requests.Browser('https://httpbin.org')
+def http(nightwatch):
+    return nightwatch.requests.Browser('https://httpbin.org')
 
 
 def test_get(http):
