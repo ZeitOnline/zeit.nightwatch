@@ -17,6 +17,8 @@ def pytest_addoption(parser):
 def nightwatch():
     """Convenience fixture to quickly access the nightwatch modules"""
     import zeit.nightwatch
+    import zeit.nightwatch.requests
+    import zeit.nightwatch.selenium
     return zeit.nightwatch
 
 
