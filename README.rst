@@ -1,3 +1,7 @@
+.. image:: https://github.com/ZeitOnline/zeit.nightwatch/workflows/Run%20tests/badge.svg>
+   :alt: Test status badge
+
+
 ===============
 zeit.nightwatch
 ===============
@@ -102,6 +106,17 @@ Example usage::
         s = selenium
         s.get('/my-video')
         s.wait(EC.presence_of_element_located((By.CLASS_NAME, 'videoplayer')))
+
+
+Convenience 'nightwatch' fixture
+================================
+
+``zeit.nightwatch`` also provides a convenience fixture to save some typing. The
+``Browser`` and ``WebDriverChrome`` can alternatively be "imported" like so::
+
+    @pytest.fixture
+    def http(nightwatch):
+        return nightwatch.requests.Browser('https://example.com')
 
 
 Running against different environments

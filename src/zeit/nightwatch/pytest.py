@@ -14,6 +14,15 @@ def pytest_addoption(parser):
 
 
 @pytest.fixture(scope='session')
+def nightwatch():
+    """Convenience fixture to quickly access the nightwatch modules"""
+    import zeit.nightwatch
+    import zeit.nightwatch.requests
+    import zeit.nightwatch.selenium
+    return zeit.nightwatch
+
+
+@pytest.fixture(scope='session')
 def nightwatch_environment(request):  # convenience spelling
     """Run tests against this environment (staging, production, etc.)"""
     return request.config.getoption('--nightwatch-environment')
@@ -47,5 +56,5 @@ def pytest_collection_modifyitems(items):
     `-m 'not selenium'`. (The fixture must be provided by the client project.)
     """
     for item in items:
-        if 'selenium' in item.fixturenames:
+        if 'selenium' in getattr(item, 'fixturenames', []):
             item.add_marker(pytest.mark.selenium)
