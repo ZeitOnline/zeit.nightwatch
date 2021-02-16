@@ -12,7 +12,7 @@ pytest helpers for http smoke tests
 Making HTTP requests
 ====================
 
-``zeit.nightwatch.requests.Browser`` wraps a `requests <https://pypi.org/project/requests/>`_ ``Session`` to provide some convenience features:
+``zeit.nightwatch.Browser`` wraps a `requests <https://pypi.org/project/requests/>`_ ``Session`` to provide some convenience features:
 
 - Instantiate with a base url, and then only use paths:
   ``http = Browser('https://example.com'); http.get('/foo')``
@@ -30,7 +30,7 @@ Example usage::
 
     @pytest.fixture
     def http():
-        return zeit.nightwatch.requests.Browser('https://example.com')
+        return zeit.nightwatch.Browser('https://example.com')
 
     def test_my_site(http):
         r = http.get('/something')
@@ -45,7 +45,7 @@ Example usage::
         assert '/home' in r.url
 
     def test_meinezeit_redirects_to_konto_after_login():
-        http = zeit.nightwatch.requests.Browser(sso_url='https://meine.zeit.de/anmelden')
+        http = zeit.nightwatch.Browser(sso_url='https://meine.zeit.de/anmelden')
         r = http.sso_login('joe@example.com', 'secret')
         assert r.url == 'https://www.zeit.de/konto'
 
@@ -70,7 +70,7 @@ Example usage::
 Controlling a browser with Selenium
 ===================================
 
-``zeit.nightwatch.selenium.WebDriverChrome`` inherits from ``selenium.webdriver.Chrome`` to provide some convenience features:
+``zeit.nightwatch.WebDriverChrome`` inherits from ``selenium.webdriver.Chrome`` to provide some convenience features:
 
 - Instantiate with a base url, and then only use paths:
   ``browser = WebDriverChrome('https://example.com'); browser.get('/foo')``
@@ -87,7 +87,7 @@ Example usage::
 
     @pytest.fixture(scope='session')
     def selenium_session(request):
-        browser = zeit.nightwatch.selenium.WebDriverChrome(
+        browser = zeit.nightwatch.WebDriverChrome(
             'https://example.com',
             headless=not request.config.getoption('--selenium-visible'))
         yield browser
@@ -116,7 +116,7 @@ Convenience 'nightwatch' fixture
 
     @pytest.fixture
     def http(nightwatch):
-        return nightwatch.requests.Browser('https://example.com')
+        return nightwatch.Browser('https://example.com')
 
 
 Running against different environments
@@ -147,7 +147,7 @@ A pattern we found helpful is using a fixture to provide environment-specific se
 
     @pytest.fixture
     def http(config):
-        return zeit.nightwatch.requests.Browser(config['base_url'])
+        return zeit.nightwatch.Browser(config['base_url'])
 
     def test_some_integration_that_has_no_staging(http, config):
         if config['environment'] != 'production':

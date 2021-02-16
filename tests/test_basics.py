@@ -3,7 +3,7 @@ import pytest
 
 @pytest.fixture
 def http(nightwatch):
-    return nightwatch.requests.Browser('https://httpbin.org')
+    return nightwatch.Browser('https://httpbin.org')
 
 
 def test_get(http):

@@ -5,7 +5,7 @@ zeit.nightwatch changes
 1.2.0 (unreleased)
 ------------------
 
-- Add convenience `nightwatch` fixture
+- Add convenience `nightwatch` fixture and toplevel API
 
 - Add first test & fix package setup
 
