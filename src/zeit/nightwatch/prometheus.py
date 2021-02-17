@@ -45,6 +45,7 @@ class PrometheusReport:
     def __init__(self, config):
         self.config = config
         self.registry = prometheus_client.CollectorRegistry()
+        self.metrics = {}
 
     def pytest_runtest_logreport(self, report):
         if report.when != 'call':
@@ -52,10 +53,12 @@ class PrometheusReport:
         opt = self.config.option
         labels = dict(x.split('=') for x in opt.prometheus_extra_labels)
         labels['test'] = report.location[2]
-        metric = prometheus_client.Gauge(
-            opt.prometheus_metric_name.format(funcname=report.location[2]), '',
-            labels.keys(), registry=self.registry)
-        metric.labels(**labels).set(1 if report.outcome == 'passed' else 0)
+        name = opt.prometheus_metric_name.format(funcname=report.location[2])
+        if 'name' not in self.metrics:
+            self.metrics['name'] = prometheus_client.Gauge(
+                name, '', labels.keys(), registry=self.registry)
+        self.metrics['name'].labels(**labels).set(
+            1 if report.outcome == 'passed' else 0)
 
     def pytest_sessionfinish(self, session):
         opt = self.config.option
