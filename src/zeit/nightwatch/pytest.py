@@ -44,6 +44,14 @@ def selenium(selenium_session):
     selenium_session.delete_all_cookies()
 
 
+@pytest.fixture(scope='session')
+def zeitde(nightwatch_environment):
+    if nightwatch_environment == 'production':
+        return lambda x: 'https://%s.zeit.de' % x
+    else:
+        return lambda x: 'https://%s.%s.zeit.de' % (x, nightwatch_environment)
+
+
 def pytest_configure(config):
     logging.getLogger().setLevel(logging.INFO)
     config.inicfg['log_format'] = (
