@@ -17,6 +17,7 @@ Making HTTP requests
 - Instantiate with a base url, and then only use paths:
   ``http = Browser('https://example.com'); http.get('/foo')``
   will request https://example.com/foo
+- A convenience ``http`` fixture is provided, which can be configured via the ``nightwatch_config`` fixture.
 - Use call instead of get, because it's just that *little bit* shorter.
   (``http('/foo')`` instead of ``http.get('/foo')``)
 - Fill and submit forms, powered by `mechanicalsoup <https://pypi.org/project/MechanicalSoup/>`_.
@@ -28,9 +29,12 @@ Making HTTP requests
 
 Example usage::
 
-    @pytest.fixture
-    def http():
-        return zeit.nightwatch.Browser('https://example.com')
+    @pytest.fixture(scope='session')
+    def nightwatch_config():
+        return dict(browser=dict(
+            baseurl='https://example.com',
+            sso_url='https://meine.zeit.de/anmelden',
+        ))
 
     def test_my_site(http):
         r = http.get('/something')
@@ -44,8 +48,7 @@ Example usage::
         r = http.submit()
         assert '/home' in r.url
 
-    def test_meinezeit_redirects_to_konto_after_login():
-        http = zeit.nightwatch.Browser(sso_url='https://meine.zeit.de/anmelden')
+    def test_meinezeit_redirects_to_konto_after_login(http):
         r = http.sso_login('joe@example.com', 'secret')
         assert r.url == 'https://www.zeit.de/konto'
 
@@ -74,6 +77,7 @@ Controlling a browser with Selenium
 
 - Instantiate with a base url, and then only use paths:
   ``browser = WebDriverChrome('https://example.com'); browser.get('/foo')``
+- A convenience ``selenium`` fixture is provided, which can be configured via the ``nightwatch_config`` fixture.
 - ``wait()`` wraps ``WebDriverWait`` and converts ``TimeoutException` into an ``AssertionError``
 - Use ``sso_login(username, password)`` to log into https://meine.zeit.de
 - See source code for specific API details.
@@ -86,19 +90,10 @@ Since you'll probably want to set a base url, you have to provide this fixture y
 Example usage::
 
     @pytest.fixture(scope='session')
-    def selenium_session(request):
-        browser = zeit.nightwatch.WebDriverChrome(
-            'https://example.com',
-            headless=not request.config.getoption('--selenium-visible'))
-        yield browser
-        browser.quit()
-
-
-    @pytest.fixture
-    def selenium(selenium_session):
-        yield selenium_session
-        selenium_session.delete_all_cookies()
-
+    def nightwatch_config():
+        return dict(selenium=dict(
+            baseurl='https://example.com',
+        ))
 
     def test_js_based_video_player(selenium):
         from selenium.webdriver.common.by import By
@@ -106,17 +101,6 @@ Example usage::
         s = selenium
         s.get('/my-video')
         s.wait(EC.presence_of_element_located((By.CLASS_NAME, 'videoplayer')))
-
-
-Convenience 'nightwatch' fixture
-================================
-
-``zeit.nightwatch`` also provides a convenience fixture to save some typing. The
-``Browser`` and ``WebDriverChrome`` can alternatively be "imported" like so::
-
-    @pytest.fixture
-    def http(nightwatch):
-        return nightwatch.Browser('https://example.com')
 
 
 Running against different environments
@@ -138,19 +122,13 @@ A pattern we found helpful is using a fixture to provide environment-specific se
         'password': 'secret2',
     }
 
-
     @pytest.fixture(scope='session')
-    def config(nightwatch_environment):
+    def nightwatch_config(nightwatch_environment):
         config = globals()['CONFIG_%s' % nightwatch_environment.upper()]
-        config['environment'] = nightwatch_environment
-        return config
+        return dict(environment=nightwatch_environment, browser=config)
 
-    @pytest.fixture
-    def http(config):
-        return zeit.nightwatch.Browser(config['base_url'])
-
-    def test_some_integration_that_has_no_staging(http, config):
-        if config['environment'] != 'production':
+    def test_some_integration_that_has_no_staging(http, nightwatch_config):
+        if nightwatch_config['environment'] != 'production':
             pytest.skip('The xyz integration has no staging')
         r = http('/trigger-xyz')
         assert r.json()['message'] == 'OK'

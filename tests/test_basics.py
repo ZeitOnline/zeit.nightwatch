@@ -1,9 +1,9 @@
 import pytest
 
 
-@pytest.fixture
-def http(nightwatch):
-    return nightwatch.Browser('https://httpbin.org')
+@pytest.fixture(scope='session')
+def nightwatch_config():
+    return dict(browser=dict(baseurl='https://httpbin.org'))
 
 
 def test_get(http):

@@ -11,7 +11,7 @@ class WebDriverChrome(selenium.webdriver.Chrome):
     ]
 
     def __init__(
-            self, baseurl, timeout, sso_url=None, headless=True,
+            self, baseurl, timeout=30, sso_url=None, headless=True,
             window='1200x800', user_agent='Mozilla/ZONFrontendMonitoring',
             *args, **kw):
         self.baseurl = baseurl

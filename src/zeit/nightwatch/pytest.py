@@ -14,18 +14,34 @@ def pytest_addoption(parser):
 
 
 @pytest.fixture(scope='session')
-def nightwatch():
-    """Convenience fixture to quickly access the nightwatch modules"""
-    import zeit.nightwatch
-    import zeit.nightwatch.requests
-    import zeit.nightwatch.selenium
-    return zeit.nightwatch
-
-
-@pytest.fixture(scope='session')
 def nightwatch_environment(request):  # convenience spelling
     """Run tests against this environment (staging, production, etc.)"""
     return request.config.getoption('--nightwatch-environment')
+
+
+@pytest.fixture
+def http(nightwatch_config):
+    """Testbrowser using `requests` & `mechanicalsoup` libraries"""
+    config = nightwatch_config.get('browser', {})
+    return zeit.nightwatch.Browser(**config)
+
+
+@pytest.fixture(scope='session')
+def selenium_session(request, nightwatch_config):
+    """Setup for `selenium` based testbrowser (not intended for direct use)"""
+    headless = not request.config.getoption('--selenium-visible')
+    config = nightwatch_config.get('selenium', {})
+    config.setdefault('headless', headless)
+    browser = zeit.nightwatch.WebDriverChrome(**config)
+    request.addfinalizer(browser.quit)
+    return browser
+
+
+@pytest.fixture
+def selenium(selenium_session):
+    """Testbrowser using `selenium` & Chrome webdriver"""
+    yield selenium_session
+    selenium_session.delete_all_cookies()
 
 
 @pytest.fixture(scope='session')
