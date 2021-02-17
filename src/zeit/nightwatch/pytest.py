@@ -28,12 +28,29 @@ def nightwatch_environment(request):  # convenience spelling
     return request.config.getoption('--nightwatch-environment')
 
 
+@pytest.fixture
+def http(nightwatch_config):
+    """Testbrowser using `requests` & `mechanicalsoup` libraries"""
+    config = nightwatch_config.get('browser', {})
+    return zeit.nightwatch.Browser(**config)
+
+
 @pytest.fixture(scope='session')
-def zeitde(nightwatch_environment):
-    if nightwatch_environment == 'production':
-        return lambda x: 'https://%s.zeit.de' % x
-    else:
-        return lambda x: 'https://%s.%s.zeit.de' % (x, nightwatch_environment)
+def selenium_session(request, nightwatch_config):
+    """Setup for `selenium` based testbrowser (not intended for direct use)"""
+    headless = not request.config.getoption('--selenium-visible')
+    config = nightwatch_config.get('selenium', {})
+    config.setdefault('headless', headless)
+    browser = zeit.nightwatch.WebDriverChrome(**config)
+    request.addfinalizer(browser.quit)
+    return browser
+
+
+@pytest.fixture
+def selenium(selenium_session):
+    """Testbrowser using `selenium` & Chrome webdriver"""
+    yield selenium_session
+    selenium_session.delete_all_cookies()
 
 
 def pytest_configure(config):
