@@ -2,7 +2,7 @@ zeit.nightwatch changes
 =======================
 
 
-1.2.0 (unreleased)
+1.2.0 (2021-02-17)
 ------------------
 
 - Add convenience `nightwatch` fixture and toplevel API
