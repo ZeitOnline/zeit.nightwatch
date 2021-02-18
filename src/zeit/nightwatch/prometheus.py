@@ -22,9 +22,6 @@ def addoption(parser):
 
 
 def configure(config):
-    if not config.getoption('--prometheus'):
-        return
-
     if config.option.prometheus_extra_labels is None:
         config.option.prometheus_extra_labels = []
     config.option.prometheus_extra_labels.append(
@@ -64,6 +61,11 @@ class PrometheusReport:
 
     def pytest_sessionfinish(self, session):
         opt = self.config.option
+        if opt.verbose > 0:
+            print('\n' + prometheus_client.generate_latest(
+                self.registry).decode('utf-8'))
+        if not opt.prometheus:
+            return
         prometheus_client.push_to_gateway(
             opt.prometheus_pushgateway_url, job=opt.prometheus_job_name,
             registry=self.registry)
