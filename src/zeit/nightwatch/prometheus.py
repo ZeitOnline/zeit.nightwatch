@@ -42,6 +42,8 @@ def unconfigure(config):
 
 class PrometheusReport:
 
+    SUCCESSFUL_OUTCOMES = ['passed', 'skipped']
+
     def __init__(self, config):
         self.config = config
         self.registry = prometheus_client.CollectorRegistry()
@@ -58,7 +60,7 @@ class PrometheusReport:
             self.metrics['name'] = prometheus_client.Gauge(
                 name, '', labels.keys(), registry=self.registry)
         self.metrics['name'].labels(**labels).set(
-            1 if report.outcome == 'passed' else 0)
+            1 if report.outcome in self.SUCCESSFUL_OUTCOMES else 0)
 
     def pytest_sessionfinish(self, session):
         opt = self.config.option
