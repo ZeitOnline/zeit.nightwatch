@@ -4,6 +4,7 @@ import cssselect
 import logging
 import lxml.html
 import mechanicalsoup
+import re
 import requests
 
 
@@ -94,6 +95,18 @@ class Browser(mechanicalsoup.StatefulBrowser):
         return self.request(**self.get_request_kwargs(form, url, **kw))
 
     submit_selected = NotImplemented  # Use our customized submit() instead
+
+    def links(self, url_regex=None, link_text=None, exact_text=False,
+              *args, **kw):
+        """Enhanced to support contains instead of equals for link_text."""
+        links = self.page.find_all('a', href=True, *args, **kw)
+        if url_regex is not None:
+            return [a for a in links if re.search(url_regex, a['href'])]
+        if link_text is not None:
+            if exact_text:
+                return [a for a in links if a.text == link_text]
+            else:
+                return [a for a in links if link_text in a.text]
 
     def sso_login(self, username, password, url=None):
         """Performs login on meine.zeit.de. Opens either the configured sso_url,

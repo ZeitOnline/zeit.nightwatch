@@ -5,7 +5,7 @@ zeit.nightwatch changes
 1.4.0 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Support contains instead of equals for `find_link`
 
 
 1.3.2 (2021-02-18)
