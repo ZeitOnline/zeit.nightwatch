@@ -65,6 +65,9 @@ class Browser(mechanicalsoup.StatefulBrowser):
         kw.setdefault('allow_redirects', False)
         return self.request('head', *args, **kw)
 
+    def patch(self, *args, **kw):
+        return self.request('patch', *args, **kw)
+
     def put(self, *args, **kw):
         return self.request('put', *args, **kw)
 
