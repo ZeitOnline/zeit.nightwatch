@@ -1,11 +1,10 @@
 zeit.nightwatch changes
 =======================
 
-
 1.4.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Include tests & setup in tarball to support `devpi test`
 
 
 1.4.0 (2021-10-26)
