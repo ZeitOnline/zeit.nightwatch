@@ -1,5 +1,4 @@
 from selenium.common.exceptions import TimeoutException
-from seleniumwire.webdriver.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 import seleniumwire.webdriver
 
@@ -17,7 +16,7 @@ class WebDriverChrome(seleniumwire.webdriver.Chrome):
         self.baseurl = baseurl
         self.sso_url = sso_url
         self.timeout = timeout
-        opts = Options()
+        opts = seleniumwire.webdriver.ChromeOptions()
         for x in self.default_options:
             opts.add_argument(x)
         if headless:
