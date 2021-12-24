@@ -1,6 +1,7 @@
 import logging
 import pytest
 import zeit.nightwatch.prometheus
+import zeit.nightwatch.seleniumwire
 
 
 def pytest_addoption(parser):
@@ -33,6 +34,24 @@ def selenium_session(request, nightwatch_config):
     config = nightwatch_config.get('selenium', {})
     config.setdefault('headless', headless)
     browser = zeit.nightwatch.WebDriverChrome(**config)
+    request.addfinalizer(browser.quit)
+    return browser
+
+
+@pytest.fixture
+def seleniumwire(seleniumwire_session):
+    """Testbrowser using `selenium` & Chrome webdriver"""
+    yield seleniumwire_session
+    seleniumwire_session.delete_all_cookies()
+
+
+@pytest.fixture(scope='session')
+def seleniumwire_session(request, nightwatch_config):
+    """Setup for `selenium` based testbrowser (not intended for direct use)"""
+    headless = not request.config.getoption('--selenium-visible')
+    config = nightwatch_config.get('selenium', {})
+    config.setdefault('headless', headless)
+    browser = zeit.nightwatch.seleniumwire.WebDriverChrome(**config)
     request.addfinalizer(browser.quit)
     return browser
 
