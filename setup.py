@@ -24,6 +24,7 @@ setup(
         'prometheus_client',
         'pytest',
         'selenium',
+        'selenium-wire',
         'setuptools',
     ],
     entry_points={
