@@ -32,7 +32,9 @@ def selenium_session(request, nightwatch_config):
     headless = not request.config.getoption('--selenium-visible')
     config = nightwatch_config.get('selenium', {})
     config.setdefault('headless', headless)
-    browser = zeit.nightwatch.WebDriverChrome(**config)
+    config.setdefault('driver_class', 'WebDriverChrome')
+    cls = getattr(zeit.nightwatch, config.pop('driver_class'))
+    browser = cls(**config)
     request.addfinalizer(browser.quit)
     return browser
 

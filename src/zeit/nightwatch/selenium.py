@@ -4,7 +4,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 import selenium.webdriver
 
 
-class WebDriverChrome(selenium.webdriver.Chrome):
+class Convenience:
 
     default_options = [
         'disable-gpu',
@@ -50,3 +50,20 @@ class WebDriverChrome(selenium.webdriver.Chrome):
         self.find_element_by_id('login_email').send_keys(username)
         self.find_element_by_id('login_pass').send_keys(password)
         self.find_element_by_css_selector('input.submit-button.log').click()
+
+
+class WebDriverChrome(Convenience, selenium.webdriver.Chrome):
+    pass
+
+
+try:
+    import seleniumwire.webdriver
+
+    class ProxiedWebDriverChrome(Convenience, seleniumwire.webdriver.Chrome):
+        pass
+except ImportError:  # soft dependency
+    class ProxiedWebDriverChrome:
+        def __init__(self, *args, **kw):
+            raise RuntimeError(
+                'Could not import `seleniumwire`, maybe run '
+                '`pip install selenium-wire`?')

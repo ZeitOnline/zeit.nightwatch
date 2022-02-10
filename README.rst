@@ -103,6 +103,21 @@ Example usage::
         s.wait(EC.presence_of_element_located((By.CLASS_NAME, 'videoplayer')))
 
 
+Advanced usecase: To intercept/modify browser requests with `selenium-wire <https://pypi.org/project/selenium-wire/>`_, install that package (e.g. ``pip install selenium-wire``) and set ``driver_class=ProxiedWebDriverChrome`` in the nightwatch ``selenium`` config::
+
+    @pytest.fixture(scope='session')
+    def nightwatch_config():
+        return dict(selenium=dict(
+            baseurl='https://example.com',
+            driver_class='ProxiedWebDriverChrome',
+        ))
+
+    def test_inject_authorization_header(selenium):
+        s = selenium
+        s.request_interceptor = lambda x: r.headers['authorization'] = 'Bearer MYTOKEN'
+        s.get('/protected-page')
+
+
 Running against different environments
 ======================================
 
