@@ -124,7 +124,7 @@ class Browser(mechanicalsoup.StatefulBrowser):
         self.select_form()
         self.form['email'] = username
         self.form['pass'] = password
-        return self.submit()
+        return self.submit(headers={"referer": url})
 
 
 class LazySoupBrowserState(_BrowserState):
