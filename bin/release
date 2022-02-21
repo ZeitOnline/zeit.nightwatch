@@ -1,0 +1,17 @@
+#!/bin/bash
+
+set -e
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+cd $DIR
+if [[ Pipfile.lock -nt .pipenv.success ]]; then
+    pipenv sync
+    touch .pipenv.success
+fi
+cd ..
+
+env PIPENV_PIPFILE="$DIR/Pipfile" \
+    TWINE_USERNAME="$(vault read --field=username zon/v1/pypi/zon-backend)" \
+    TWINE_PASSWORD="$(vault read --field=password zon/v1/pypi/zon-backend)" \
+    pipenv run fullrelease "$@"

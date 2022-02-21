@@ -1,2 +1,3 @@
 /.tox/
 /src/zeit.nightwatch.egg-info/
+/bin/.pipenv.success
