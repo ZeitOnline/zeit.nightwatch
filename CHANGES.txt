@@ -4,7 +4,7 @@ zeit.nightwatch changes
 1.4.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- ZO-712: Set referer explicitly during sso_login, required for csrf validation
 
 
 1.4.1 (2021-10-27)
