@@ -4,7 +4,7 @@ zeit.nightwatch changes
 1.4.3 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Support `selenium-wire` in addition to `selenium`
 
 
 1.4.2 (2022-02-21)
