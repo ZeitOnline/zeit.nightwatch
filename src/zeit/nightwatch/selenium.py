@@ -37,7 +37,7 @@ class Convenience:
         if timeout is None:
             timeout = self.timeout
         try:
-            WebDriverWait(self, timeout).until(condition)
+            return WebDriverWait(self, timeout).until(condition)
         except TimeoutException as e:
             raise AssertionError() from e
 
