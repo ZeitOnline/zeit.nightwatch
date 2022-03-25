@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='zeit.nightwatch',
-    version='1.5.0',
+    version='1.5.1.dev0',
     author='Zeit Online',
     author_email='zon-backend@zeit.de',
     url='https://github.com/ZeitOnline/zeit.nightwatch',
