@@ -1,5 +1,6 @@
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 import selenium.webdriver
 
@@ -47,9 +48,9 @@ class Convenience:
         if url is None:
             raise ValueError('No url given and no sso_url configured')
         self.get(url)
-        self.find_element_by_id('login_email').send_keys(username)
-        self.find_element_by_id('login_pass').send_keys(password)
-        self.find_element_by_css_selector('input.submit-button.log').click()
+        self.find_element(By.ID, 'login_email').send_keys(username)
+        self.find_element(By.ID, 'login_pass').send_keys(password)
+        self.find_element(By.CSS_SELECTOR, 'input.submit-button.log').click()
 
 
 class WebDriverChrome(Convenience, selenium.webdriver.Chrome):
