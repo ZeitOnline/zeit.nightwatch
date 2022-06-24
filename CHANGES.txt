@@ -4,7 +4,7 @@ zeit.nightwatch changes
 1.5.1 (unreleased)
 ------------------
 
-- ZO-1513: Fix dremoved find element functions.
+- Use non-deprecated selenium API
 
 
 1.5.0 (2022-03-25)
