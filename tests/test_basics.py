@@ -1,4 +1,5 @@
 import pytest
+from selenium.webdriver.common.by import By
 
 
 @pytest.fixture(scope='session')
@@ -14,4 +15,4 @@ def test_get(http):
 
 def test_selenium_works(selenium):
     selenium.get('/forms/post')
-    assert selenium.find_element_by_css_selector('form')
+    assert selenium.find_element(By.CSS_SELECTOR, 'form')
