@@ -21,6 +21,7 @@ setup(
         'lxml',
         'mechanicalsoup',
         'requests',
+        'playwright',
         'prometheus_client',
         'pytest',
         'selenium',

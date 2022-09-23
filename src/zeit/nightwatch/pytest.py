@@ -1,6 +1,7 @@
 import logging
 import pytest
 import zeit.nightwatch.prometheus
+from playwright.sync_api import sync_playwright
 
 
 def pytest_addoption(parser):
@@ -24,6 +25,17 @@ def http(nightwatch_config):
     """Testbrowser using `requests` & `mechanicalsoup` libraries"""
     config = nightwatch_config.get('browser', {})
     return zeit.nightwatch.Browser(**config)
+
+
+@pytest.fixture
+def playwright(nightwatch_config):
+    context_manager = sync_playwright()
+    playwright = context_manager.__enter__()
+    browser = playwright.chromium.launch()
+    page = browser.new_page()
+    yield page
+    browser.close()
+    context_manager.__exit__(None, None, None)
 
 
 @pytest.fixture(scope='session')
