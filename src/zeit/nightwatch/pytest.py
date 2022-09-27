@@ -19,7 +19,7 @@ def nightwatch_environment(request):  # convenience spelling
     return request.config.getoption('--nightwatch-environment')
 
 
-@pytest.fixture
+@pytest.fixture()
 def http(nightwatch_config):
     """Testbrowser using `requests` & `mechanicalsoup` libraries"""
     config = nightwatch_config.get('browser', {})
@@ -35,11 +35,11 @@ def selenium_session(request, nightwatch_config):
     config.setdefault('driver_class', 'WebDriverChrome')
     cls = getattr(zeit.nightwatch, config.pop('driver_class'))
     browser = cls(**config)
-    request.addfinalizer(browser.quit)
-    return browser
+    yield browser
+    browser.quit
 
 
-@pytest.fixture
+@pytest.fixture()
 def selenium(selenium_session):
     """Testbrowser using `selenium` & Chrome webdriver"""
     yield selenium_session

@@ -110,6 +110,7 @@ class Browser(mechanicalsoup.StatefulBrowser):
                 return [a for a in links if a.text == link_text]
             else:
                 return [a for a in links if link_text in a.text]
+        return []
 
     def sso_login(self, username, password, url=None):
         """Performs login on meine.zeit.de. Opens either the configured sso_url,
