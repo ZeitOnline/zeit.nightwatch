@@ -20,7 +20,7 @@ jobs:
 
     - run: python -m pip install --upgrade tox
     # XXX fails with "Unable to locate package google-chrome"
-    # - uses: nanasess/setup-chromedriver@v1
+    - uses: nanasess/setup-chromedriver@v1
 
     - run: python -m tox -- --junitxml=report.xml -o junit_family=xunit2
 
