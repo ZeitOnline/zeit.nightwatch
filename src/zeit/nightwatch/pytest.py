@@ -36,7 +36,7 @@ def selenium_session(request, nightwatch_config):
     cls = getattr(zeit.nightwatch, config.pop('driver_class'))
     browser = cls(**config)
     yield browser
-    browser.quit
+    browser.quit()
 
 
 @pytest.fixture()
