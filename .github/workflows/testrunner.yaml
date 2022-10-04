@@ -7,6 +7,17 @@ on:
   pull_request:
 
 jobs:
+  precommit:
+    name: Pre-Commit
+    runs-on: ubuntu-20.04
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install pre-commit
+        run: pip install pre-commit
+      - name: Run code checks
+        run: pre-commit run --all-files
   test:
     name: Test Run
     runs-on: [self-hosted,linux]
