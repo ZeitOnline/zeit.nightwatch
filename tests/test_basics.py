@@ -16,3 +16,8 @@ def test_get(http):
 def test_selenium_works(selenium):
     selenium.get('/forms/post')
     assert selenium.find_element(By.CSS_SELECTOR, 'form')
+
+
+def test_playwright_works(page):
+    page.goto('/forms/post')
+    assert page.locator('form').count() == 1
