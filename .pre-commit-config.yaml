@@ -28,6 +28,6 @@ repos:
     - flake8-polyfill
     - flake8-print
     args:
-    - "--ignore=A003,C408,I001,I003,I004,I005,I900,IF100,Q000,G001,PT013,PT023,S311,S,F401,R504,T201"
+    - "--ignore=A003,C408,I001,I003,I004,I005,I900,IF100,Q000,G001,PT013,PT023,S311,S,F401,R504,R505,T201"
     - "--per-file-ignores=*test*/*:S101,smoke.py:S101,S501,E501,sanitize.py:E501,R503,authors.py:ECE001,W504,batou:T102,conf.py:A001"
     - "--max-line-length=88"

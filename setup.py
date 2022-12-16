@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='zeit.nightwatch',
-    version='1.5.2.dev0',
+    version='1.6.0.dev0',
     author='Zeit Online',
     author_email='zon-backend@zeit.de',
     url='https://github.com/ZeitOnline/zeit.nightwatch',
@@ -23,6 +23,7 @@ setup(
         'requests',
         'prometheus_client',
         'pytest',
+        'pytest-playwright',
         'selenium',
         'setuptools',
     ],

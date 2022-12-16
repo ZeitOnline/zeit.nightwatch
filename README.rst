@@ -118,6 +118,27 @@ Advanced usecase: To intercept/modify browser requests with `selenium-wire <http
         s.get('/protected-page')
 
 
+Controlling a browser with playwright
+=====================================
+
+As an alternative to Selenium (above) nightwatch also supports playwright;
+mostly by pulling in the ``pytest-playwright`` plugin, so you can use their fixtures, with some convenience features:
+
+- Configure a base url, and then only use paths:
+  ``page.goto('/foo')``
+
+Example usage::
+
+    @pytest.fixture(scope='session')
+    def nightwatch_config():
+        return dict(selenium=dict(
+            baseurl='https://example.com',
+        ))
+
+    def test_playwright_works(page):
+        page.goto('/something')
+
+
 Running against different environments
 ======================================
 
