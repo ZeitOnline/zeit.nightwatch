@@ -12,6 +12,6 @@ fi
 cd ..
 
 env PIPENV_PIPFILE="$DIR/Pipfile" \
-    TWINE_USERNAME="$(vault read --field=username zon/v1/pypi/zon-backend)" \
-    TWINE_PASSWORD="$(vault read --field=password zon/v1/pypi/zon-backend)" \
+    TWINE_USERNAME="__token__" \
+    TWINE_PASSWORD="$(vault read --field=token zon/v1/pypi/zon-backend)" \
     pipenv run fullrelease "$@"
