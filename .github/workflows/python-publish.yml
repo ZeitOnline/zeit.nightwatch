@@ -10,7 +10,7 @@ on:
 jobs:
   deploy:
 
-    runs-on: [self-hosted,linux]
+    runs-on: zon-ubuntu-general-dind
 
     steps:
     - uses: actions/checkout@v2

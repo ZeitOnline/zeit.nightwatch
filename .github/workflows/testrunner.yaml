@@ -20,7 +20,7 @@ jobs:
         run: pre-commit run --all-files
   test:
     name: Test Run
-    runs-on: [self-hosted,linux]
+    runs-on: zon-ubuntu-general-dind
     permissions:
       contents: read
       checks: write
