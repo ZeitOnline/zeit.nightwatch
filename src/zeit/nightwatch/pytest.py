@@ -1,5 +1,6 @@
 import logging
 import pytest
+import zeit.nightwatch.jsonreport
 import zeit.nightwatch.prometheus
 
 
@@ -10,6 +11,7 @@ def pytest_addoption(parser):
     parser.addoption(
         '--selenium-visible', action='store_true', default=False,
         help='Show selenium browser when running tests')
+    zeit.nightwatch.jsonreport.addoption(parser)
     zeit.nightwatch.prometheus.addoption(parser)
 
 
@@ -70,10 +72,12 @@ def pytest_configure(config):
     config.addinivalue_line(
         'markers', 'selenium: Selenium test (helper for test selection)')
 
+    zeit.nightwatch.jsonreport.configure(config)
     zeit.nightwatch.prometheus.configure(config)
 
 
 def pytest_unconfigure(config):
+    zeit.nightwatch.jsonreport.unconfigure(config)
     zeit.nightwatch.prometheus.unconfigure(config)
 
 

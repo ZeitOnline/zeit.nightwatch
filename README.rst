@@ -190,3 +190,22 @@ Clients should set the job name, e.g. like this::
 
 This functionality is disabled by default, nightwatch declares a pytest commandline option ``--prometheus`` which has to be present to enable pushing the metrics.
 There also are commandline options to override the pushgateway url etc., please see the source code for those details.
+
+
+Sending test results to elasticsearch
+=====================================
+
+We're running our tests as kubernetes pods, and their stdout/stderr output is captured and sent to elasticsearch.
+However the normal pytest output is meant for humans, but is not machine-readable.
+Thus we've implemented a JSON lines test report format that can be enabled with ``--json-report=filename`` or ``--json-report=-`` to directly send to stdout.
+
+Here's an output example, formatted for readability (in reality, each test produces a single JSON line, since that's what our k8s log processor expects)::
+
+    {
+      "time": "2023-12-08T10:37:40.630617+00:00",
+      "test_stage": "call",
+      "test_class": "smoketest.test_api",
+      "test_name": "test_example",
+      "test_outcome": "passed",
+      "system_log": "11:37:40 INFO  [zeit.nightwatch.requests][MainThread] > POST http://example.com/something\n..."
+    }
