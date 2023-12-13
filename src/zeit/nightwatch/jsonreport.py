@@ -12,6 +12,8 @@ def addoption(parser):
 
 
 def configure(config):
+    if not config.option.json_report:
+        return
     config.option.color = 'no'
     config.stash[JSONLinesReport.__name__] = JSONLinesReport(
         config.option.json_report)

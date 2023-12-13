@@ -4,7 +4,7 @@ zeit.nightwatch changes
 1.7.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Don't try to json report if no argument was given
 
 
 1.7.0 (2023-12-08)
