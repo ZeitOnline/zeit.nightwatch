@@ -1,7 +1,7 @@
 zeit.nightwatch changes
 =======================
 
-1.7.1 (unreleased)
+1.7.1 (2023-12-13)
 ------------------
 
 - Don't try to json report if no argument was given
