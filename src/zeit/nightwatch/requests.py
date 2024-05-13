@@ -165,4 +165,5 @@ class HeaderPrintingSession(requests.Session):
         resp.update(response.headers)
         lines.extend(['< %s: %s' % x for x in resp.items()])
         log.info('\n'.join(lines))
+        log.info(response.text)
         return response
