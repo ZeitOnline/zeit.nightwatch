@@ -1,7 +1,7 @@
 zeit.nightwatch changes
 =======================
 
-1.7.2 (unreleased)
+1.8.0 (2024-05-13)
 ------------------
 
 - Also log HTTP response body, not just headers.
