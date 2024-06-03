@@ -123,8 +123,12 @@ class Browser(mechanicalsoup.StatefulBrowser):
             raise ValueError('No url given and no sso_url configured')
         self.get(url)
         self.select_form()
-        self.form['email'] = username
-        self.form['pass'] = password
+        if self.form.form.attrs["id"] == "kc-form-login":
+            self.form["username"] = username
+            self.form["password"] = password
+        else:
+            self.form["email"] = username
+            self.form["pass"] = password
         return self.submit(headers={"referer": url})
 
 
