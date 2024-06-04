@@ -3,6 +3,7 @@ import logging
 import pytest
 
 import zeit.nightwatch.jsonreport
+import zeit.nightwatch.playwright  # NOQA activate sso_login monkeypatch
 import zeit.nightwatch.prometheus
 
 
@@ -57,8 +58,6 @@ def selenium(selenium_session):
 
 @pytest.fixture(scope="session", autouse=True)
 def base_url(nightwatch_config):  # Overrides pytest-base-url
-    import zeit.nightwatch.playwright  # NOQA activate sso_login monkeypatch
-
     return nightwatch_config.get("selenium", {}).get("baseurl")
 
 

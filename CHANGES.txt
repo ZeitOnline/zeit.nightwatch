@@ -4,7 +4,7 @@ zeit.nightwatch changes
 1.9.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Apply convenience playwright Page.sso_login monkeypatch at import-time
 
 
 1.9.0 (2024-06-04)
