@@ -1,10 +1,11 @@
+import logging
+import re
+
 from mechanicalsoup.stateful_browser import _BrowserState
 import bs4
 import cssselect
-import logging
 import lxml.html
 import mechanicalsoup
-import re
 import requests
 
 
@@ -20,7 +21,7 @@ def css(self, selector):
 
 
 def xpath(self, selector):
-    if not hasattr(self, 'parsed'):
+    if not hasattr(self, "parsed"):
         self.parsed = lxml.html.document_fromstring(self.text)
     return self.parsed.xpath(selector)
 
@@ -45,7 +46,7 @@ class Browser(mechanicalsoup.StatefulBrowser):
     def __init__(self, baseurl=None, sso_url=None, *args, **kw):
         self.baseurl = baseurl
         self.sso_url = sso_url
-        kw.setdefault('session', HeaderPrintingSession())
+        kw.setdefault("session", HeaderPrintingSession())
         super().__init__(*args, **kw)
 
     @property
@@ -53,37 +54,38 @@ class Browser(mechanicalsoup.StatefulBrowser):
         return self.session.headers
 
     def get(self, *args, **kw):
-        return self.request('get', *args, **kw)
+        return self.request("get", *args, **kw)
 
     def __call__(self, *args, **kw):
         return self.get(*args, **kw)
 
     def open(self, url, *args, **kw):
-        return self.request('get', url, *args, **kw)
+        return self.request("get", url, *args, **kw)
 
     def head(self, *args, **kw):
-        kw.setdefault('allow_redirects', False)
-        return self.request('head', *args, **kw)
+        kw.setdefault("allow_redirects", False)
+        return self.request("head", *args, **kw)
 
     def patch(self, *args, **kw):
-        return self.request('patch', *args, **kw)
+        return self.request("patch", *args, **kw)
 
     def put(self, *args, **kw):
-        return self.request('put', *args, **kw)
+        return self.request("put", *args, **kw)
 
     def post(self, *args, **kw):
-        return self.request('post', *args, **kw)
+        return self.request("post", *args, **kw)
 
     def delete(self, *args, **kw):
-        return self.request('delete', *args, **kw)
+        return self.request("delete", *args, **kw)
 
     def request(self, method, url, *args, **kw):
-        if url.startswith('/') and self.baseurl:
+        if url.startswith("/") and self.baseurl:
             url = self.baseurl + url
         r = self.session.request(method, url, *args, **kw)
         # Taken from StatefulBrowser.open()
         self._StatefulBrowser__state = LazySoupBrowserState(
-            r, self.soup_config, url=r.url, request=r.request)
+            r, self.soup_config, url=r.url, request=r.request
+        )
         return r
 
     def submit(self, form=None, url=None, submit=None, **kw):
@@ -99,12 +101,11 @@ class Browser(mechanicalsoup.StatefulBrowser):
 
     submit_selected = NotImplemented  # Use our customized submit() instead
 
-    def links(self, url_regex=None, link_text=None, exact_text=False,
-              *args, **kw):
+    def links(self, url_regex=None, link_text=None, exact_text=False, *args, **kw):
         """Enhanced to support contains instead of equals for link_text."""
-        links = self.page.find_all('a', href=True, *args, **kw)
+        links = self.page.find_all("a", *args, href=True, **kw)
         if url_regex is not None:
-            return [a for a in links if re.search(url_regex, a['href'])]
+            return [a for a in links if re.search(url_regex, a["href"])]
         if link_text is not None:
             if exact_text:
                 return [a for a in links if a.text == link_text]
@@ -120,11 +121,15 @@ class Browser(mechanicalsoup.StatefulBrowser):
         if url is None:
             url = self.sso_url
         if url is None:
-            raise ValueError('No url given and no sso_url configured')
+            raise ValueError("No url given and no sso_url configured")
         self.get(url)
         self.select_form()
-        self.form['email'] = username
-        self.form['pass'] = password
+        if self.form.form.attrs["id"] == "kc-form-login":
+            self.form["username"] = username
+            self.form["password"] = password
+        else:
+            self.form["email"] = username
+            self.form["pass"] = password
         return self.submit(headers={"referer": url})
 
 
@@ -142,8 +147,7 @@ class LazySoupBrowserState(_BrowserState):
     def page(self):
         if self._page is None:
             # Taken from mechanicalsoup.Browser.add_soup()
-            self._page = bs4.BeautifulSoup(
-                self.response.content, **self.soup_config)
+            self._page = bs4.BeautifulSoup(self.response.content, **self.soup_config)
         return self._page
 
     @page.setter
@@ -155,15 +159,15 @@ class HeaderPrintingSession(requests.Session):
     """Prints request+response headers, to help understanding test failures."""
 
     def request(self, method, url, *args, **kw):
-        log.info('> %s %s', method.upper(), url)
+        log.info("> %s %s", method.upper(), url)
         response = super().request(method, url, *args, **kw)
         request = response.request
-        lines = ['< %s %s' % (request.method, request.url)]
-        lines.extend(['> %s: %s' % x for x in request.headers.items()])
-        lines.append('---')
-        resp = {'Status': response.status_code}
+        lines = ["< %s %s" % (request.method, request.url)]
+        lines.extend(["> %s: %s" % x for x in request.headers.items()])
+        lines.append("---")
+        resp = {"Status": response.status_code}
         resp.update(response.headers)
-        lines.extend(['< %s: %s' % x for x in resp.items()])
-        log.info('\n'.join(lines))
+        lines.extend(["< %s: %s" % x for x in resp.items()])
+        log.info("\n".join(lines))
         log.info(response.text)
         return response

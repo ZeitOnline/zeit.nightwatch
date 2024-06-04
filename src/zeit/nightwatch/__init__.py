@@ -1,2 +1,2 @@
 from .requests import Browser
-from .selenium import WebDriverChrome, ProxiedWebDriverChrome
+from .selenium import ProxiedWebDriverChrome, WebDriverChrome
