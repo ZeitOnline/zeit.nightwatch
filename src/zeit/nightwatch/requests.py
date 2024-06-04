@@ -102,7 +102,7 @@ class Browser(mechanicalsoup.StatefulBrowser):
     def links(self, url_regex=None, link_text=None, exact_text=False,
               *args, **kw):
         """Enhanced to support contains instead of equals for link_text."""
-        links = self.page.find_all('a', href=True, *args, **kw)
+        links = self.page.find_all('a', *args, href=True, **kw)
         if url_regex is not None:
             return [a for a in links if re.search(url_regex, a['href'])]
         if link_text is not None:
