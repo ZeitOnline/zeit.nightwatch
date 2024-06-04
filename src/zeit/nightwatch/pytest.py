@@ -56,12 +56,10 @@ def selenium(selenium_session):
 
 
 @pytest.fixture(scope="session", autouse=True)
-def _set_playwright_base_url(nightwatch_config, pytestconfig):
+def base_url(nightwatch_config):  # Overrides pytest-base-url
     import zeit.nightwatch.playwright  # NOQA activate sso_login monkeypatch
 
-    url = nightwatch_config.get("selenium", {}).get("baseurl")
-    if url:
-        pytestconfig.option.base_url = url
+    return nightwatch_config.get("selenium", {}).get("baseurl")
 
 
 @pytest.fixture(scope="session")
