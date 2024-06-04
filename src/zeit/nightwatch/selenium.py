@@ -8,13 +8,20 @@ import selenium.webdriver
 class Convenience:
 
     default_options = [
-        'disable-gpu',
+        "disable-gpu",
     ]
 
     def __init__(
-            self, baseurl, timeout=30, sso_url=None, headless=True,
-            window='1200x800', user_agent='Mozilla/ZONFrontendMonitoring',
-            *args, **kw):
+        self,
+        baseurl,
+        timeout=30,
+        sso_url=None,
+        headless=True,
+        window="1200x800",
+        user_agent="Mozilla/ZONFrontendMonitoring",
+        *args,
+        **kw
+    ):
         self.baseurl = baseurl
         self.sso_url = sso_url
         self.timeout = timeout
@@ -22,15 +29,15 @@ class Convenience:
         for x in self.default_options:
             opts.add_argument(x)
         if headless:
-            opts.add_argument('headless')
-        opts.add_argument('user-agent=[%s]' % user_agent)
-        opts.add_argument('window-size=%s' % window)
+            opts.add_argument("headless")
+        opts.add_argument("user-agent=[%s]" % user_agent)
+        opts.add_argument("window-size=%s" % window)
 
-        kw['options'] = opts
+        kw["options"] = opts
         super().__init__(*args, **kw)
 
     def get(self, url):
-        if url.startswith('/'):
+        if url.startswith("/"):
             url = self.baseurl + url
         super().get(url)
 
@@ -46,7 +53,7 @@ class Convenience:
         if url is None:
             url = self.sso_url
         if url is None:
-            raise ValueError('No url given and no sso_url configured')
+            raise ValueError("No url given and no sso_url configured")
         self.get(url)
         try:
             button = self.find_element(By.ID, "kc-login")
@@ -68,9 +75,12 @@ try:
 
     class ProxiedWebDriverChrome(Convenience, seleniumwire.webdriver.Chrome):
         pass
+
 except ImportError:  # soft dependency
+
     class ProxiedWebDriverChrome:
         def __init__(self, *args, **kw):
             raise RuntimeError(
-                'Could not import `seleniumwire`, maybe run '
-                '`pip install selenium-wire`?')
+                "Could not import `seleniumwire`, maybe run "
+                "`pip install selenium-wire`?"
+            )
