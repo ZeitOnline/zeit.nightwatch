@@ -1,10 +1,10 @@
 zeit.nightwatch changes
 =======================
 
-1.9.2 (unreleased)
+2.0.0 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Remove selenium support
 
 
 1.9.1 (2024-06-04)
