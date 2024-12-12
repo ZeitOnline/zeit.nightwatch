@@ -4,7 +4,7 @@ zeit.nightwatch changes
 1.9.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Add infrastructure support for generating HTML reports and upload them to GCS
 
 
 1.9.1 (2024-06-04)

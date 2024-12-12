@@ -79,6 +79,10 @@ def pytest_configure(config):
         "markers", "selenium: Selenium test (helper for test selection)"
     )
 
+    # Is there seriously no proper API?
+    config._inicache["junit_logging"] = "all"
+    config._inicache["junit_log_passing_tests"] = False
+
     zeit.nightwatch.jsonreport.configure(config)
     zeit.nightwatch.prometheus.configure(config)
 

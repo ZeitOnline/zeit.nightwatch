@@ -17,6 +17,9 @@ setup(
     license="BSD",
     install_requires=[
         "cssselect",
+        "gsutil",
+        "junit2html",
+        "junitparser",
         "lxml",
         "mechanicalsoup",
         "requests",
