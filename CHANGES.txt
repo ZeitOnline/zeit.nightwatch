@@ -4,7 +4,7 @@ zeit.nightwatch changes
 1.9.3 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Add our own `gcs-upload` helper script, since gsutil does not support gcloud auth anymore
 
 
 1.9.2 (2024-12-12)

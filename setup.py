@@ -3,7 +3,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="zeit.nightwatch",
-    version="1.9.3.dev0",
+    version="1.10.0.dev0",
     author="Zeit Online",
     author_email="zon-backend@zeit.de",
     url="https://github.com/ZeitOnline/zeit.nightwatch",
@@ -17,7 +17,7 @@ setup(
     license="BSD",
     install_requires=[
         "cssselect",
-        "gsutil",
+        "google-cloud-storage",
         "junit2html",
         "junitparser",
         "lxml",
@@ -31,5 +31,6 @@ setup(
     ],
     entry_points={
         "pytest11": ["zeit_nightwatch=zeit.nightwatch.pytest"],
+        "console_scripts": ["gcs-upload=zeit.nightwatch.gcs:upload"],
     },
 )
