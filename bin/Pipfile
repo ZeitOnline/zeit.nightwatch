@@ -4,7 +4,8 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-"zest.releaser" = "*"
+hatch = "*"
+towncrier = "*"
 
 [requires]
 python_version = "3"

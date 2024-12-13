@@ -1,0 +1,61 @@
+[project]
+name = "zeit.nightwatch"
+description = "pytest helpers for http smoke tests"
+authors = [{ name = "Zeit Online", email = "zon-backend@zeit.de" }]
+dynamic = ["version", "readme"]
+dependencies = [
+    "cssselect",
+    "google-cloud-storage",
+    "junit2html",
+    "junitparser",
+    "lxml",
+    "mechanicalsoup",
+    "requests",
+    "prometheus_client",
+    "pytest",
+    "pytest-playwright",
+    "selenium",
+]
+
+[project.scripts]
+gcs-upload = "zeit.nightwatch.gcs:upload"
+
+[project.entry-points.pytest11]
+zeit_nightwatch = "zeit.nightwatch.pytest"
+
+[project.urls]
+Repository = "https://github.com/ZeitOnline/zeit.nightwatch"
+
+[build-system]
+requires = ["hatchling", "hatch-fancy-pypi-readme"]
+build-backend = "hatchling.build"
+[tool.hatch.version]
+path = "src/zeit/nightwatch/__init__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/zeit"]
+
+[tool.hatch.metadata.hooks.fancy-pypi-readme]
+content-type = "text/x-rst"
+fragments = [{path="README.rst"}, {text="\n\n"}, {path="CHANGES.rst"}]
+
+[tool.pytest.ini_options]
+addopts = "--tb=native --browser-channel=chrome"
+filterwarnings = [
+  "error",
+]
+pythonpath = [
+  "tests",
+]
+
+[tool.towncrier]
+directory = "docs/changelog/"
+filename = "CHANGES.rst"
+title_format = ""
+# First underline is used for version/date header.
+# Second underline is used for the type names (like 'Bug fixes:').
+underlines = ["-", "+"]
+[[tool.towncrier.type]]
+directory = "change"
+name = "Changes"  # I'd love to omit the category, but that requires copy&paste of the whole template
+showcontent = true
