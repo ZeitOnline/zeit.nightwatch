@@ -14,7 +14,6 @@ dependencies = [
     "prometheus_client",
     "pytest",
     "pytest-playwright",
-    "selenium",
 ]
 
 [project.scripts]
