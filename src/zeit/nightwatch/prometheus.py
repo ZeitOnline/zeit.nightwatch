@@ -1,3 +1,5 @@
+import os
+
 import prometheus_client
 
 
@@ -34,9 +36,13 @@ def addoption(parser):
 def configure(config):
     if config.option.prometheus_extra_labels is None:
         config.option.prometheus_extra_labels = []
-    config.option.prometheus_extra_labels.append(
-        "environment=%s" % config.getoption("--nightwatch-environment")
-    )
+    environment = config.getoption("--nightwatch-environment")
+    config.option.prometheus_extra_labels.append("environment=%s" % environment)
+    namespace = os.environ.get("NIGHTWATCH_NAMESPACE")
+    if namespace:
+        config.option.prometheus_extra_labels.append("project=%s" % namespace)
+        if config.option.prometheus_job_name == "unknown":
+            config.option.prometheus_job_name = "namespace-%s" % environment
 
     config._prometheus = PrometheusReport(config)
     config.pluginmanager.register(config._prometheus)
