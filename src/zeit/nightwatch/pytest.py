@@ -13,12 +13,6 @@ def pytest_addoption(parser):
         default="staging",
         help=nightwatch_environment.__doc__,
     )
-    parser.addoption(
-        "--selenium-visible",
-        action="store_true",
-        default=False,
-        help="Show selenium browser when running tests",
-    )
     zeit.nightwatch.jsonreport.addoption(parser)
     zeit.nightwatch.prometheus.addoption(parser)
 
@@ -37,31 +31,6 @@ def http(nightwatch_config):
 
 
 @pytest.fixture(scope="session")
-def selenium_session(request, nightwatch_config):
-    """Setup for `selenium` based testbrowser (not intended for direct use)"""
-    headless = not request.config.getoption("--selenium-visible")
-    config = nightwatch_config.get("selenium", {})
-    config.setdefault("headless", headless)
-    config.setdefault("driver_class", "WebDriverChrome")
-    cls = getattr(zeit.nightwatch, config.pop("driver_class"))
-    browser = cls(**config)
-    yield browser
-    browser.quit()
-
-
-@pytest.fixture()
-def selenium(selenium_session):
-    """Testbrowser using `selenium` & Chrome webdriver"""
-    yield selenium_session
-    selenium_session.delete_all_cookies()
-
-
-@pytest.fixture(scope="session", autouse=True)
-def base_url(nightwatch_config):  # Overrides pytest-base-url
-    return nightwatch_config.get("selenium", {}).get("baseurl")
-
-
-@pytest.fixture(scope="session")
 def zeitde(nightwatch_environment):
     if nightwatch_environment == "production":
         return lambda x: "https://%s.zeit.de" % x
@@ -76,7 +45,7 @@ def pytest_configure(config):
     )
 
     config.addinivalue_line(
-        "markers", "selenium: Selenium test (helper for test selection)"
+        "markers", "playwright: Playwright test (helper for test selection)"
     )
 
     # Is there seriously no proper API?
@@ -93,9 +62,9 @@ def pytest_unconfigure(config):
 
 
 def pytest_collection_modifyitems(items):
-    """Allow selecting selenium test with `pytest -m selenium` or
-    `-m 'not selenium'`. (The fixture must be provided by the client project.)
+    """Allow selecting playwright test with `pytest -m playwright` or
+    `-m 'not playwright'`.
     """
     for item in items:
-        if "selenium" in getattr(item, "fixturenames", []):
-            item.add_marker(pytest.mark.selenium)
+        if "page" in getattr(item, "fixturenames", []):
+            item.add_marker(pytest.mark.playwright)

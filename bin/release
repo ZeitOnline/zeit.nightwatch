@@ -1,17 +1,49 @@
 #!/bin/bash
 
 set -e
-
+if [[ -n "$CI" ]]; then set -x; fi
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+ROOT="$(dirname $DIR)"
 
-cd $DIR
-if [[ Pipfile.lock -nt .pipenv.success ]]; then
+
+function vault_read() {
+    local path=$1
+    local field=$2
+
+    if [[ -z "$VAULT_TOKEN" ]]; then
+        VAULT_TOKEN=$(<"$HOME/.vault-token")
+    fi
+    curl --silent -H "X-Vault-Token: $VAULT_TOKEN" \
+         "${VAULT_ADDR%/}/v1/zon/v1/${path}" | \
+        sed -e "s+^.*\"${field}\":\"\([^\"]*\).*$+\1+"
+}
+
+
+export PIPENV_PIPFILE=$DIR/Pipfile
+if [[ $DIR/Pipfile.lock -nt $DIR/.pipenv.success ]]; then
     pipenv sync
-    touch .pipenv.success
+    touch $DIR/.pipenv.success
 fi
-cd ..
 
-env PIPENV_PIPFILE="$DIR/Pipfile" \
-    TWINE_USERNAME="__token__" \
-    TWINE_PASSWORD="$(vault read --field=token zon/v1/pypi/zon-backend)" \
-    pipenv run fullrelease "$@"
+if pipenv run towncrier build --version draft --draft 2>&1 | \
+       grep -q "No significant changes"; then
+    exit 0
+fi
+
+pipenv run hatch version release
+version="$(pipenv run hatch version 2>&1)"
+
+pipenv run towncrier build --version="$version" --yes
+git commit src/**/__init__.py CHANGES.rst docs/changelog/ -m "Preparing release: $version"
+git tag "$version"
+
+pipenv run hatch build
+pipenv run hatch publish --user __token__ --auth "$(vault_read zon/v1/pypi/zon-backend token)"
+
+cd $ROOT
+pipenv run hatch version minor
+pipenv run hatch version dev
+git commit src/**/__init__.py -m "Back to development: $(pipenv run hatch version 2>&1)"
+
+git push
+git push --tags

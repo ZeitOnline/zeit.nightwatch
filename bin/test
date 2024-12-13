@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -e
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+export PIPENV_PIPFILE=$DIR/Pipfile
+if [[ $DIR/Pipfile.lock -nt $DIR/.pipenv.success ]]; then
+    pipenv sync
+    touch $DIR/.pipenv.success
+fi
+
+exec pipenv run hatch run pytest "$@"

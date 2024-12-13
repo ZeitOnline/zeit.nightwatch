@@ -70,70 +70,19 @@ Example usage::
         assert r.css('a.home')
 
 
-Controlling a browser with Selenium
-===================================
-
-``zeit.nightwatch.WebDriverChrome`` inherits from ``selenium.webdriver.Chrome`` to provide some convenience features:
-
-- Instantiate with a base url, and then only use paths:
-  ``browser = WebDriverChrome('https://example.com'); browser.get('/foo')``
-- A convenience ``selenium`` fixture is provided, which can be configured via the ``nightwatch_config`` fixture.
-- ``wait()`` wraps ``WebDriverWait`` and converts ``TimeoutException` into an ``AssertionError``
-- Use ``sso_login(username, password)`` to log into https://meine.zeit.de
-- See source code for specific API details.
-
-nightwatch also declares a pytest commandline option ``--selenium-visible`` to help toggling headless mode,
-and adds a ``selenium`` mark to all tests that use a ``selenium`` fixture, so you can (de)select them with ``pytest -m selenium`` (or ``-m 'not selenium'``).
-Since you'll probably want to set a base url, you have to provide this fixture yourself.
-
-
-Example usage::
-
-    @pytest.fixture(scope='session')
-    def nightwatch_config():
-        return dict(selenium=dict(
-            baseurl='https://example.com',
-        ))
-
-    def test_js_based_video_player(selenium):
-        from selenium.webdriver.common.by import By
-        from selenium.webdriver.support import expected_conditions as EC
-        s = selenium
-        s.get('/my-video')
-        s.wait(EC.presence_of_element_located((By.CLASS_NAME, 'videoplayer')))
-
-
-Advanced usecase: To intercept/modify browser requests with `selenium-wire <https://pypi.org/project/selenium-wire/>`_, install that package (e.g. ``pip install selenium-wire``) and set ``driver_class=ProxiedWebDriverChrome`` in the nightwatch ``selenium`` config::
-
-    @pytest.fixture(scope='session')
-    def nightwatch_config():
-        return dict(selenium=dict(
-            baseurl='https://example.com',
-            driver_class='ProxiedWebDriverChrome',
-        ))
-
-    def test_inject_authorization_header(selenium):
-        s = selenium
-        s.request_interceptor = lambda x: r.headers['authorization'] = 'Bearer MYTOKEN'
-        s.get('/protected-page')
-
-
 Controlling a browser with playwright
 =====================================
 
-As an alternative to Selenium (above) nightwatch also supports playwright;
-mostly by pulling in the ``pytest-playwright`` plugin, so you can use their fixtures, with some convenience features:
+nightwatch pulls in the ``pytest-playwright`` plugin, so you can use their fixtures.
 
-- Configure a base url, and then only use paths:
-  ``page.goto('/foo')``
+Unfortunately, the playwright API is too unfriendly to allow nightwatch to set the base url automatically,
+so you'll need to do that yourself, for example by overriding the ``base_url`` fixture::
 
 Example usage::
 
-    @pytest.fixture(scope='session')
-    def nightwatch_config():
-        return dict(selenium=dict(
-            baseurl='https://example.com',
-        ))
+    @pytest.fixture(scope="session")
+    def base_url():
+        return 'https://example.com'
 
     def test_playwright_works(page):
         page.goto('/something')
