@@ -1,1 +1,0 @@
-Set project label and job name automatically from k8s namespace environment variable

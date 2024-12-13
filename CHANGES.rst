@@ -1,3 +1,12 @@
+2.1.0 (2024-12-13)
+------------------
+
+Changes
++++++++
+
+- Set project label and job name automatically from k8s namespace environment variable (prometheus)
+
+
 2.0.0 (2024-12-13)
 ------------------
 
