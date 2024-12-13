@@ -1,3 +1,12 @@
+2.2.0 (2024-12-13)
+------------------
+
+Changes
++++++++
+
+- Record prometheus metric on setup/teardown failure (prometheus)
+
+
 2.1.0 (2024-12-13)
 ------------------
 
