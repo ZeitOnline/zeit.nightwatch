@@ -1,1 +1,0 @@
-Breaking change: Projects have to set base_url via a fixture now, setting nightwatch_config["selenium"] was removed due to unreliability

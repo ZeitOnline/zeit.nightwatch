@@ -1,3 +1,13 @@
+2.0.0 (2024-12-13)
+------------------
+
+Changes
++++++++
+
+- Breaking change: Projects have to set base_url via a fixture now, setting nightwatch_config["selenium"] was removed due to unreliability (playwright)
+- Remove selenium support (selenium)
+
+
 zeit.nightwatch changes
 =======================
 
