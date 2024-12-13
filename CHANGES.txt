@@ -1,6 +1,12 @@
 zeit.nightwatch changes
 =======================
 
+1.11.0 (unreleased)
+-------------------
+
+- Nothing changed yet.
+
+
 1.10.0 (2024-12-13)
 -------------------
 
