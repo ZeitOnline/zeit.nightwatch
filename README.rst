@@ -78,8 +78,6 @@ nightwatch pulls in the ``pytest-playwright`` plugin, so you can use their fixtu
 Unfortunately, the playwright API is too unfriendly to allow nightwatch to set the base url automatically,
 so you'll need to do that yourself, for example by overriding the ``base_url`` fixture::
 
-Example usage::
-
     @pytest.fixture(scope="session")
     def base_url():
         return 'https://example.com'
