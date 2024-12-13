@@ -64,7 +64,7 @@ class PrometheusReport:
         self.metrics = {}
 
     def pytest_runtest_logreport(self, report):
-        if report.when != "call":
+        if report.when != "call" and report.outcome != "failed":
             return
         opt = self.config.option
         labels = dict(x.split("=") for x in opt.prometheus_extra_labels)
