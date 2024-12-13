@@ -126,14 +126,14 @@ our use case for this library is continuous black box high-level tests that chec
 For this purpose, we want to integrate the test results with our monitoring system, which is based on `Prometheus <https://prometheus.io>`_.
 We've taken inspiration from the `pytest-prometheus <https://pypi.org/project/pytest-prometheus/>`_ plugin, and tweaked it a little to use a stable metric name, so we can write a generic alerting rule.
 
-This uses the configured `Pushgateway <https://prometheus.io/docs/practices/pushing/>`_ to record metrics like this (the ``environment`` label is populated from ``--nightwatch-environment``, see above)::
+This uses the configured `Pushgateway <https://prometheus.io/docs/practices/pushing/>`_ to record metrics like this::
 
-    nightwatch_check{test="test_error_page_contains_home_link",environment="staging",job="website"}=1  # pass=1, fail=0
+    nightwatch_check{test="test_error_page_contains_home_link",environment="staging",project="website",job="website-staging"}=1  # pass=1, fail=0
 
-Clients should set the job name, e.g. like this::
-
-    def pytest_configure(config):
-        config.option.prometheus_job_name = 'website'
+The ``environment`` label is populated from ``--nightwatch-environment``, see above,
+and the ``project`` label is populated from an environment variable ``NIGHTWATCH_NAMESPACE`` if present
+(this can be set e.g. via `k8s Downward API <https://kubernetes.io/docs/concepts/workloads/pods/downward-api/#available-fields>`_).
+(Note that we use a separate ``project`` label, since the ``namespace`` label is occupied by the pushgateway itself and thus does not help.)
 
 This functionality is disabled by default, nightwatch declares a pytest commandline option ``--prometheus`` which has to be present to enable pushing the metrics.
 There also are commandline options to override the pushgateway url etc., please see the source code for those details.
