@@ -38,7 +38,7 @@ git commit src/**/__init__.py CHANGES.rst docs/changelog/ -m "Preparing release:
 git tag "$version"
 
 pipenv run hatch build
-pipenv run hatch publish --user __token__ --auth "$(vault_read zon/v1/pypi/zon-backend token)"
+pipenv run hatch publish --user __token__ --auth "$(vault_read pypi/zon-backend token)"
 
 cd $ROOT
 pipenv run hatch version minor
