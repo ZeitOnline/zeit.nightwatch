@@ -10,6 +10,11 @@ def nightwatch_config():
     )
 
 
+@pytest.fixture(scope="session")
+def base_url(nightwatch_config):
+    return nightwatch_config.get("selenium", {}).get("baseurl")
+
+
 def test_get(http):
     r = http.get("/get")
     assert r.status_code == 200

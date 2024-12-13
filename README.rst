@@ -122,18 +122,16 @@ Controlling a browser with playwright
 =====================================
 
 As an alternative to Selenium (above) nightwatch also supports playwright;
-mostly by pulling in the ``pytest-playwright`` plugin, so you can use their fixtures, with some convenience features:
+mostly by pulling in the ``pytest-playwright`` plugin.
 
-- Configure a base url, and then only use paths:
-  ``page.goto('/foo')``
+Unfortunately, the playwright API is too unfriendly to allow nightwatch to set the base url automatically,
+so you'll need to do that yourself, for example by overriding the ``base_url`` fixture::
 
 Example usage::
 
-    @pytest.fixture(scope='session')
-    def nightwatch_config():
-        return dict(selenium=dict(
-            baseurl='https://example.com',
-        ))
+    @pytest.fixture(scope="session")
+    def base_url():
+        return 'https://example.com'
 
     def test_playwright_works(page):
         page.goto('/something')

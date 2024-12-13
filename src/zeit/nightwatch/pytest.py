@@ -56,11 +56,6 @@ def selenium(selenium_session):
     selenium_session.delete_all_cookies()
 
 
-@pytest.fixture(scope="session", autouse=True)
-def base_url(nightwatch_config):  # Overrides pytest-base-url
-    return nightwatch_config.get("selenium", {}).get("baseurl")
-
-
 @pytest.fixture(scope="session")
 def zeitde(nightwatch_environment):
     if nightwatch_environment == "production":
