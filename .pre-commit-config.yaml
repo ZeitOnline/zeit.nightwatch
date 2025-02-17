@@ -1,44 +1,20 @@
 repos:
-
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v4.5.0
+  rev: v5.0.0
   hooks:
   - id: check-ast
   - id: check-merge-conflict
   - id: debug-statements
   - id: trailing-whitespace
-
 - repo: https://github.com/editorconfig-checker/editorconfig-checker.python
   rev: '2.7.3'
   hooks:
   - id: editorconfig-checker
     alias: ec
-
-- repo: https://github.com/psf/black
-  rev: 24.1.1
+- repo: https://github.com/astral-sh/ruff-pre-commit
+  rev: v0.9.6
   hooks:
-  - id: black
-
-- repo: https://github.com/pycqa/isort
-  rev: 5.13.2
-  hooks:
-    - id: isort
-
-- repo: https://github.com/pycqa/flake8
-  rev: '7.0.0'
-  hooks:
-  - id: flake8
-    additional_dependencies:
-    - flake8-awesome
-    - flake8-bugbear
-    - flake8-comprehensions
-    - flake8-debugger
-    - flake8-deprecated
-    - flake8-fixme
-    - flake8-pep3101
-    - flake8-polyfill
-    - flake8-print
-    args:
-    - "--ignore=A003,C408,I001,I003,I004,I005,I900,IF100,Q000,G001,PT001,PT013,PT023,S311,S,F401,R504,R505,T201"
-    - "--per-file-ignores=*test*/*:S101,smoke.py:S101,S501,E501,sanitize.py:E501,R503,authors.py:ECE001,W504,batou:T102,conf.py:A001"
-    - "--max-line-length=88"
+  - id: ruff
+    args: [--fix, --exit-non-zero-on-fix]
+    types_or: [python, pyi]
+  - id: ruff-format

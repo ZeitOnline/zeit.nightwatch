@@ -25,6 +25,7 @@ zeit_nightwatch = "zeit.nightwatch.pytest"
 [project.urls]
 Repository = "https://github.com/ZeitOnline/zeit.nightwatch"
 
+
 [build-system]
 requires = ["hatchling", "hatch-fancy-pypi-readme"]
 build-backend = "hatchling.build"
@@ -58,3 +59,18 @@ underlines = ["-", "+"]
 directory = "change"
 name = "Changes"  # I'd love to omit the category, but that requires copy&paste of the whole template
 showcontent = true
+
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+fixable = ["ALL"]
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.ruff.lint.isort]
+from-first = true
+lines-after-imports = 2
