@@ -28,7 +28,6 @@ def unconfigure(config):
 
 
 class JSONLinesReport:
-
     def __init__(self, output):
         self.output = output
         self.records = []

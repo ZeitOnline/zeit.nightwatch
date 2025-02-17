@@ -55,7 +55,6 @@ def unconfigure(config):
 
 
 class PrometheusReport:
-
     SUCCESSFUL_OUTCOMES = ["passed", "skipped"]
 
     def __init__(self, config):
@@ -81,9 +80,7 @@ class PrometheusReport:
     def pytest_sessionfinish(self, session):
         opt = self.config.option
         if opt.verbose > 0:
-            print(
-                "\n" + prometheus_client.generate_latest(self.registry).decode("utf-8")
-            )
+            print("\n" + prometheus_client.generate_latest(self.registry).decode("utf-8"))
         if not opt.prometheus:
             return
         prometheus_client.push_to_gateway(

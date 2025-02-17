@@ -44,9 +44,7 @@ def pytest_configure(config):
         "%(asctime)s %(levelname)-5.5s [%(name)s][%(threadName)s] %(message)s"
     )
 
-    config.addinivalue_line(
-        "markers", "playwright: Playwright test (helper for test selection)"
-    )
+    config.addinivalue_line("markers", "playwright: Playwright test (helper for test selection)")
 
     # Is there seriously no proper API?
     config._inicache["junit_logging"] = "all"
