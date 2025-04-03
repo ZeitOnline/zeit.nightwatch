@@ -11,6 +11,7 @@ def sso_login(self, url, username, password):
         self.locator("#login_email").fill(username)
         self.locator("#login_pass").fill(password)
         self.locator("input.submit-button.log").click()
+    self.wait_for_url("**/konto")
 
 
 Page.sso_login = sso_login
