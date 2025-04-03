@@ -10,4 +10,8 @@ if [[ $DIR/Pipfile.lock -nt $DIR/.pipenv.success ]]; then
     touch $DIR/.pipenv.success
 fi
 
+vault token lookup > /dev/null
+export NORMAL_USERNAME=$(vault read -field name zon/v1/sso/production/testing/reading/normal)
+export NORMAL_PASSWORD=$(vault read -field password zon/v1/sso/production/testing/reading/normal)
+
 exec pipenv run hatch run pytest "$@"
