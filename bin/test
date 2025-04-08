@@ -10,4 +10,9 @@ if [[ $DIR/Pipfile.lock -nt $DIR/.pipenv.success ]]; then
     touch $DIR/.pipenv.success
 fi
 
+if vault token lookup > /dev/null 2>&1 ; then
+    export NORMAL_USERNAME=$(vault read -field name zon/v1/sso/production/testing/reading/normal)
+    export NORMAL_PASSWORD=$(vault read -field password zon/v1/sso/production/testing/reading/normal)
+    echo "Setup vault credentials for testing login form"
+fi
 exec pipenv run hatch run pytest "$@"

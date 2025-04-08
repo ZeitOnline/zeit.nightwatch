@@ -156,3 +156,9 @@ Here's an output example, formatted for readability (in reality, each test produ
       "test_outcome": "passed",
       "system_log": "11:37:40 INFO  [zeit.nightwatch.requests][MainThread] > POST http://example.com/something\n..."
     }
+
+
+Development and testing
+=======================
+
+Pull requests will run tests in workflow via `bin/test` and do test_basics.py. The two tests from test_sso_login.py will be skipped. These two tests will be only done locally if you have set your vault token and testing credentials are setup.
