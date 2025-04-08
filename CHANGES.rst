@@ -3,6 +3,15 @@ zeit.nightwatch changes
 
 .. towncrier release notes start
 
+2.3.1 (2025-04-08)
+------------------
+
+Changes
++++++++
+
+- Also wait for return_url redirect after playwright sso login (ssowait)
+
+
 2.3.0 (2025-04-03)
 ------------------
 
