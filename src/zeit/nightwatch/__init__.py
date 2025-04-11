@@ -1,3 +1,3 @@
-__version__ = "2.3.2.dev0"
+__version__ = "2.3.2"
 
 from .requests import Browser as Browser

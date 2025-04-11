@@ -3,6 +3,15 @@ zeit.nightwatch changes
 
 .. towncrier release notes start
 
+2.3.2 (2025-04-11)
+------------------
+
+Changes
++++++++
+
+- Correctly determine prometheus job name from environment variables (prometheus)
+
+
 2.3.1 (2025-04-08)
 ------------------
 
