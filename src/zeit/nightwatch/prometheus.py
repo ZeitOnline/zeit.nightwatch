@@ -37,12 +37,12 @@ def configure(config):
     if config.option.prometheus_extra_labels is None:
         config.option.prometheus_extra_labels = []
     environment = config.getoption("--nightwatch-environment")
-    config.option.prometheus_extra_labels.append("environment=%s" % environment)
+    config.option.prometheus_extra_labels.append(f"environment={environment}")
     namespace = os.environ.get("NIGHTWATCH_NAMESPACE")
     if namespace:
-        config.option.prometheus_extra_labels.append("project=%s" % namespace)
+        config.option.prometheus_extra_labels.append(f"project={namespace}")
         if config.option.prometheus_job_name == "unknown":
-            config.option.prometheus_job_name = "namespace-%s" % environment
+            config.option.prometheus_job_name = f"{namespace}-{environment}"
 
     config._prometheus = PrometheusReport(config)
     config.pluginmanager.register(config._prometheus)
