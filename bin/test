@@ -3,16 +3,14 @@
 set -e
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd $DIR/..
 
-export PIPENV_PIPFILE=$DIR/Pipfile
-if [[ $DIR/Pipfile.lock -nt $DIR/.pipenv.success ]]; then
-    pipenv sync
-    touch $DIR/.pipenv.success
-fi
+export UV_NO_MANAGED_PYTHON=1
+uv sync --frozen
 
 if vault token lookup > /dev/null 2>&1 ; then
     export NORMAL_USERNAME=$(vault read -field name zon/v1/sso/production/testing/reading/normal)
     export NORMAL_PASSWORD=$(vault read -field password zon/v1/sso/production/testing/reading/normal)
     echo "Setup vault credentials for testing login form"
 fi
-exec pipenv run hatch run pytest "$@"
+exec .venv/bin/pytest "$@"
