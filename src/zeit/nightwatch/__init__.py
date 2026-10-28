@@ -1,3 +1,6 @@
-__version__ = "2.4.0.dev0"
+import importlib.metadata
 
 from .requests import Browser as Browser
+
+
+__version__ = importlib.metadata.version("zeit.nightwatch")

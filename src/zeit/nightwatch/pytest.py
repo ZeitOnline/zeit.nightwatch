@@ -40,9 +40,12 @@ def zeitde(nightwatch_environment):
 
 def pytest_configure(config):
     logging.getLogger().setLevel(logging.INFO)
-    config.inicfg["log_format"] = (
-        "%(asctime)s %(levelname)-5.5s [%(name)s][%(threadName)s] %(message)s"
-    )
+    # pytest prefers the commandline option over the ini value, so this
+    # overrides a project's ini setting, but not an explicit `--log-format`.
+    if config.option.log_format is None:
+        config.option.log_format = (
+            "%(asctime)s %(levelname)-5.5s [%(name)s][%(threadName)s] %(message)s"
+        )
 
     config.addinivalue_line("markers", "playwright: Playwright test (helper for test selection)")
 

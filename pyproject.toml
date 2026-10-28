@@ -1,8 +1,10 @@
 [project]
 name = "zeit.nightwatch"
 description = "pytest helpers for http smoke tests"
+version = "2.4.0.dev0"
+requires-python = ">=3.12"
 authors = [{ name = "Die ZEIT Online Engineering", email = "zon-backend@zeit.de" }]
-dynamic = ["version", "readme"]
+dynamic = ["readme"]
 dependencies = [
     "cssselect",
     "google-cloud-storage",
@@ -15,6 +17,9 @@ dependencies = [
     "pytest",
     "pytest-playwright",
 ]
+
+[dependency-groups]
+release = ["towncrier"]
 
 [project.scripts]
 gcs-upload = "zeit.nightwatch.gcs:upload"
@@ -29,8 +34,8 @@ Repository = "https://github.com/ZeitOnline/zeit.nightwatch"
 [build-system]
 requires = ["hatchling", "hatch-fancy-pypi-readme"]
 build-backend = "hatchling.build"
-[tool.hatch.version]
-path = "src/zeit/nightwatch/__init__.py"
+[tool.hatch.build]
+exclude = ["/bin", "/docs"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/zeit"]
