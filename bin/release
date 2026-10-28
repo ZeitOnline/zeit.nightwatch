@@ -5,45 +5,37 @@ if [[ -n "$CI" ]]; then set -x; fi
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ROOT="$(dirname $DIR)"
 
+cd $ROOT
+export UV_NO_MANAGED_PYTHON=1
+uv sync --frozen --only-group release
+export venv=$ROOT/.venv/bin
 
-function vault_read() {
-    local path=$1
-    local field=$2
-
-    if [[ -z "$VAULT_TOKEN" ]]; then
-        VAULT_TOKEN=$(<"$HOME/.vault-token")
-    fi
-    curl --silent -H "X-Vault-Token: $VAULT_TOKEN" \
-         "${VAULT_ADDR%/}/v1/zon/v1/${path}" | \
-        sed -e "s+^.*\"${field}\":\"\([^\"]*\).*$+\1+"
-}
-
-
-export PIPENV_PIPFILE=$DIR/Pipfile
-if [[ $DIR/Pipfile.lock -nt $DIR/.pipenv.success ]]; then
-    pipenv sync
-    touch $DIR/.pipenv.success
-fi
-
-if pipenv run towncrier build --version draft --draft 2>&1 | \
-       grep -q "No significant changes"; then
+if $venv/towncrier build --version develop --draft 2>&1 | \
+        grep -q "No significant changes"; then
     exit 0
 fi
 
-pipenv run hatch version release
-version="$(pipenv run hatch version 2>&1)"
+version=$(uv version --frozen --short | sed -e 's/\.dev[0-9]*$//')
+uv version "$version"
 
-pipenv run towncrier build --version="$version" --yes
-git commit src/**/__init__.py CHANGES.rst docs/changelog/ -m "Preparing release: $version"
+$venv/towncrier build --version="$version" --yes
+git commit pyproject.toml uv.lock CHANGES.rst docs/changelog/ -m "Preparing release: $version"
 git tag "$version"
 
-pipenv run hatch build
-pipenv run hatch publish --user __token__ --auth "$(vault_read pypi/zon-backend token)"
+uv build
+if [[ -z "$VAULT_TOKEN" ]]; then
+    VAULT_TOKEN=$(<"$HOME/.vault-token")
+fi
+token=$(curl --silent -H "X-Vault-Token: $VAULT_TOKEN" \
+             "${VAULT_ADDR%/}/v1/zon/v1/pypi/zon-backend" | \
+            sed -e 's+^.*"token":"\([^"]*\).*$+\1+')
+uv publish --token "$token"
 
-cd $ROOT
-pipenv run hatch version minor
-pipenv run hatch version dev
-git commit src/**/__init__.py -m "Back to development: $(pipenv run hatch version 2>&1)"
+version="$(uv version --frozen --short --dry-run --bump minor).dev0"
+uv version "$version"
+git commit pyproject.toml uv.lock -m "Back to development: $version"
+
+rm -rf dist
 
 git push
 git push --tags
