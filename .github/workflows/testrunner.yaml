@@ -20,7 +20,7 @@ jobs:
           wget "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb" -P /tmp &&
           sudo apt-get install -y "/tmp/google-chrome-stable_current_amd64.deb" -f
     - uses: nanasess/setup-chromedriver@v2
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
     - uses: actions/setup-python@v4
       with:
         python-version: "3.14"
