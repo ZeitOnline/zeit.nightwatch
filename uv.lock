@@ -1046,7 +1046,7 @@ wheels = [
 
 [[package]]
 name = "zeit-nightwatch"
-version = "2.4.0"
+version = "2.5.0.dev0"
 source = { editable = "." }
 dependencies = [
     { name = "cssselect" },

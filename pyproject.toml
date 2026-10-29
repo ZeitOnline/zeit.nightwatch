@@ -1,7 +1,7 @@
 [project]
 name = "zeit.nightwatch"
 description = "pytest helpers for http smoke tests"
-version = "2.4.0"
+version = "2.5.0.dev0"
 requires-python = ">=3.12"
 authors = [{ name = "Die ZEIT Online Engineering", email = "zon-backend@zeit.de" }]
 dynamic = ["readme"]
