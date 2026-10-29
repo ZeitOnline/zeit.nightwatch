@@ -1,10 +1,9 @@
 [project]
 name = "zeit.nightwatch"
 description = "pytest helpers for http smoke tests"
-version = "2.5.0.dev0"
 requires-python = ">=3.12"
 authors = [{ name = "Die ZEIT Online Engineering", email = "zon-backend@zeit.de" }]
-dynamic = ["readme"]
+dynamic = ["readme", "version"]
 dependencies = [
     "cssselect",
     "google-cloud-storage",
@@ -18,9 +17,6 @@ dependencies = [
     "pytest-playwright",
 ]
 
-[dependency-groups]
-release = ["towncrier"]
-
 [project.scripts]
 gcs-upload = "zeit.nightwatch.gcs:upload"
 
@@ -29,20 +25,25 @@ zeit_nightwatch = "zeit.nightwatch.pytest"
 
 [project.urls]
 Repository = "https://github.com/ZeitOnline/zeit.nightwatch"
+Changelog = "https://github.com/ZeitOnline/zeit.nightwatch/blob/main/CHANGES.md"
 
 
 [build-system]
-requires = ["hatchling", "hatch-fancy-pypi-readme"]
+requires = ["hatchling", "hatch-fancy-pypi-readme", "hatch-vcs"]
 build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "vcs"
+
 [tool.hatch.build]
-exclude = ["/bin", "/docs"]
+exclude = ["/bin"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/zeit"]
 
 [tool.hatch.metadata.hooks.fancy-pypi-readme]
-content-type = "text/x-rst"
-fragments = [{path="README.rst"}, {text="\n\n"}, {path="CHANGES.rst"}]
+content-type = "text/markdown"
+fragments = [{path="README.md"}, {text="\n\n"}, {path="CHANGES.md"}]
 
 [tool.pytest.ini_options]
 addopts = "--tb=native --browser-channel=chrome"
@@ -52,19 +53,6 @@ filterwarnings = [
 pythonpath = [
   "tests",
 ]
-
-[tool.towncrier]
-directory = "docs/changelog/"
-filename = "CHANGES.rst"
-title_format = ""
-# First underline is used for version/date header.
-# Second underline is used for the type names (like 'Bug fixes:').
-underlines = ["-", "+"]
-[[tool.towncrier.type]]
-directory = "change"
-name = "Changes"  # I'd love to omit the category, but that requires copy&paste of the whole template
-showcontent = true
-
 
 [tool.ruff]
 line-length = 100
