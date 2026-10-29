@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.4.1](https://github.com/ZeitOnline/zeit.nightwatch/compare/2.4.0...2.4.1) (2026-10-29)
+
+
+### Maintenance
+
+* convert the README to Markdown ([9b47a09](https://github.com/ZeitOnline/zeit.nightwatch/commit/9b47a09156479bf57651c07b5b2d78d2d2e2dbc8))
+* **deps:** lock file maintenance (uv) ([c1a46ab](https://github.com/ZeitOnline/zeit.nightwatch/commit/c1a46ab25cac4c6f1fac7183488e1ff4b06a36ce))
+* release with Release Please via the shared pypi-release workflow ([f3de578](https://github.com/ZeitOnline/zeit.nightwatch/commit/f3de578b827d07eb66345388eebb25392753c7a4))
+* release with Release Please via the shared pypi-release workflow ([772454e](https://github.com/ZeitOnline/zeit.nightwatch/commit/772454e5f336bc2e7224dc2907915c3c1fe2d2e0))
+
 ## 2.4.0 (2026-10-29)
 
 - Support pytest 9.2: set log format via the commandline option instead of the deprecated config.inicfg (pytest-inicfg)
