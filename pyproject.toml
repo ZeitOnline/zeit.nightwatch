@@ -3,8 +3,7 @@ name = "zeit.nightwatch"
 description = "pytest helpers for http smoke tests"
 requires-python = ">=3.12"
 authors = [{ name = "Die ZEIT Online Engineering", email = "zon-backend@zeit.de" }]
-dynamic = ["version"]
-readme = "README.rst"
+dynamic = ["readme", "version"]
 dependencies = [
     "cssselect",
     "google-cloud-storage",
@@ -30,7 +29,7 @@ Changelog = "https://github.com/ZeitOnline/zeit.nightwatch/blob/main/CHANGES.md"
 
 
 [build-system]
-requires = ["hatchling", "hatch-vcs"]
+requires = ["hatchling", "hatch-fancy-pypi-readme", "hatch-vcs"]
 build-backend = "hatchling.build"
 
 [tool.hatch.version]
@@ -41,6 +40,10 @@ exclude = ["/bin"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/zeit"]
+
+[tool.hatch.metadata.hooks.fancy-pypi-readme]
+content-type = "text/markdown"
+fragments = [{path="README.md"}, {text="\n\n"}, {path="CHANGES.md"}]
 
 [tool.pytest.ini_options]
 addopts = "--tb=native --browser-channel=chrome"
