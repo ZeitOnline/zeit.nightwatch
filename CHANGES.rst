@@ -3,6 +3,15 @@ zeit.nightwatch changes
 
 .. towncrier release notes start
 
+zeit.nightwatch 2.4.0 (2026-10-29)
+----------------------------------
+
+Changes
++++++++
+
+- Support pytest 9.2: set log format via the commandline option instead of the deprecated config.inicfg (pytest-inicfg)
+
+
 2.3.2 (2025-04-11)
 ------------------
 
