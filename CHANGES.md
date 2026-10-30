@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.4.2](https://github.com/ZeitOnline/zeit.nightwatch/compare/2.4.1...2.4.2) (2026-10-30)
+
+
+### Maintenance
+
+* **deps:** lock file maintenance (uv) ([#36](https://github.com/ZeitOnline/zeit.nightwatch/issues/36)) ([2b84c6b](https://github.com/ZeitOnline/zeit.nightwatch/commit/2b84c6bebb6a85a6f1aa448f85c52764782b1cae))
+* **deps:** update actions/checkout action to v7.0.1 ([#30](https://github.com/ZeitOnline/zeit.nightwatch/issues/30)) ([368ea1c](https://github.com/ZeitOnline/zeit.nightwatch/commit/368ea1c6c5eb2f4846ef179fe1bf862d1bfba4d7))
+* **deps:** update actions/setup-python action to v7.1.0 ([#31](https://github.com/ZeitOnline/zeit.nightwatch/issues/31)) ([018202b](https://github.com/ZeitOnline/zeit.nightwatch/commit/018202bd71765f263161e3cbdd586b941bc1c865))
+* **deps:** update enricomi/publish-unit-test-result-action action to v2.25.0 ([#40](https://github.com/ZeitOnline/zeit.nightwatch/issues/40)) ([f588ad9](https://github.com/ZeitOnline/zeit.nightwatch/commit/f588ad92db3b8881d0ae55f70c0cadae54ad765b))
+* **deps:** update nanasess/setup-chromedriver action to v2.4.0 ([#41](https://github.com/ZeitOnline/zeit.nightwatch/issues/41)) ([41f9ee9](https://github.com/ZeitOnline/zeit.nightwatch/commit/41f9ee9bc4cff15062a6b685442ff7a148aa7ce3))
+* **deps:** update nanasess/setup-chromedriver action to v3.0.0 ([#32](https://github.com/ZeitOnline/zeit.nightwatch/issues/32)) ([19cc305](https://github.com/ZeitOnline/zeit.nightwatch/commit/19cc305d80a59a7267f70398f8c395bdd04ae649))
+* **deps:** update pre-commit hook astral-sh/ruff-pre-commit to v0.17.2 ([#35](https://github.com/ZeitOnline/zeit.nightwatch/issues/35)) ([69801ae](https://github.com/ZeitOnline/zeit.nightwatch/commit/69801aed47da0d09f10987e375c75ac94d66ae1b))
+* **deps:** update pre-commit hook editorconfig-checker/editorconfig-checker.python to 3.11.1 ([#33](https://github.com/ZeitOnline/zeit.nightwatch/issues/33)) ([b844f4a](https://github.com/ZeitOnline/zeit.nightwatch/commit/b844f4a57a74f09c26d154a93b089f3a2722d933))
+* **deps:** update pre-commit hook pre-commit/pre-commit-hooks to v6.0.0 ([#34](https://github.com/ZeitOnline/zeit.nightwatch/issues/34)) ([08b7107](https://github.com/ZeitOnline/zeit.nightwatch/commit/08b710707454dc49ec1a0ce2523da317b74b8229))
+* **deps:** update zeitonline/gh-action-workflows action to 4.9.0 ([#42](https://github.com/ZeitOnline/zeit.nightwatch/issues/42)) ([652899e](https://github.com/ZeitOnline/zeit.nightwatch/commit/652899e9b1d1c209003cc8d4e5bc6b413a9164f6))
+
 ## [2.4.1](https://github.com/ZeitOnline/zeit.nightwatch/compare/2.4.0...2.4.1) (2026-10-29)
 
 
