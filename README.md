@@ -19,28 +19,33 @@ pytest helpers for http smoke tests
 Example usage:
 
 ```python
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 def nightwatch_config():
-    return dict(browser=dict(
-        baseurl='https://example.com',
-        sso_url='https://meine.zeit.de/anmelden',
-    ))
+    return dict(
+        browser=dict(
+            baseurl="https://example.com",
+            sso_url="https://meine.zeit.de/anmelden",
+        )
+    )
+
 
 def test_my_site(http):
-    r = http.get('/something')
+    r = http.get("/something")
     assert r.status_code == 200
 
+
 def test_login(http):
-    http('/login')
+    http("/login")
     http.select_form()
-    http.form['username'] = 'joe@example.com'
-    http.form['password'] = 'secret'
+    http.form["username"] = "joe@example.com"
+    http.form["password"] = "secret"
     r = http.submit()
-    assert '/home' in r.url
+    assert "/home" in r.url
+
 
 def test_meinezeit_redirects_to_konto_after_login(http):
-    r = http.sso_login('joe@example.com', 'secret')
-    assert r.url == 'https://www.zeit.de/konto'
+    r = http.sso_login("joe@example.com", "secret")
+    assert r.url == "https://www.zeit.de/konto"
 ```
 
 ## Examining HTML responses
@@ -54,9 +59,9 @@ Example usage:
 
 ```python
 def test_error_page_contains_home_link(http):
-    r = http('/nonexistent')
+    r = http("/nonexistent")
     assert r.status_code == 404
-    assert r.css('a.home')
+    assert r.css("a.home")
 ```
 
 ## Controlling a browser with playwright
@@ -68,10 +73,11 @@ Unfortunately, the playwright API is too unfriendly to allow nightwatch to set t
 ```python
 @pytest.fixture(scope="session")
 def base_url():
-    return 'https://example.com'
+    return "https://example.com"
+
 
 def test_playwright_works(page):
-    page.goto('/something')
+    page.goto("/something")
 ```
 
 ## Running against different environments
@@ -82,27 +88,29 @@ A pattern we found helpful is using a fixture to provide environment-specific se
 
 ```python
 CONFIG_STAGING = {
-    'base_url': 'https://staging.example.com',
-    'username': 'staging_user',
-    'password': 'secret',
+    "base_url": "https://staging.example.com",
+    "username": "staging_user",
+    "password": "secret",
 }
 
 CONFIG_PRODUCTION = {
-    'base_url': 'https://www.example.com',
-    'username': 'production_user',
-    'password': 'secret2',
+    "base_url": "https://www.example.com",
+    "username": "production_user",
+    "password": "secret2",
 }
 
-@pytest.fixture(scope='session')
+
+@pytest.fixture(scope="session")
 def nightwatch_config(nightwatch_environment):
-    config = globals()['CONFIG_%s' % nightwatch_environment.upper()]
+    config = globals()["CONFIG_%s" % nightwatch_environment.upper()]
     return dict(environment=nightwatch_environment, browser=config)
 
+
 def test_some_integration_that_has_no_staging(http, nightwatch_config):
-    if nightwatch_config['environment'] != 'production':
-        pytest.skip('The xyz integration has no staging')
-    r = http('/trigger-xyz')
-    assert r.json()['message'] == 'OK'
+    if nightwatch_config["environment"] != "production":
+        pytest.skip("The xyz integration has no staging")
+    r = http("/trigger-xyz")
+    assert r.json()["message"] == "OK"
 ```
 
 ## Sending test results to prometheus
