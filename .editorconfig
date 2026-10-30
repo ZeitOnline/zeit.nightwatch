@@ -10,3 +10,7 @@ end_of_line = lf
 indent_style = space
 insert_final_newline = true
 trim_trailing_whitespace = true
+
+# Keep the license text as published, it is indented with tabs
+[LICENSE]
+indent_style = unset
