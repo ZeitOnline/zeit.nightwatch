@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.2](https://github.com/ZeitOnline/zeit.nightwatch/compare/2.4.1...2.4.2) (2026-11-17)
+
+
+### Bug Fixes
+
+* **gcs:** upload with the content type guessed from the target name ([dc1cb42](https://github.com/ZeitOnline/zeit.nightwatch/commit/dc1cb42460febd192b6599c65867ea8d57cd8403))
+
 ## [2.4.1](https://github.com/ZeitOnline/zeit.nightwatch/compare/2.4.0...2.4.1) (2026-10-29)
 
 
