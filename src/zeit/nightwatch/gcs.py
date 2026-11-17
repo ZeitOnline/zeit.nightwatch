@@ -1,3 +1,4 @@
+import mimetypes
 import os
 import sys
 
@@ -19,5 +20,12 @@ def upload():
 
     bucket = storage.Client(project=project).bucket(bucket)
     blob = bucket.blob(target)
+    # Without a content type GCS stores application/octet-stream: browsers
+    # download the report instead of rendering it, and tools that read objects
+    # as text refuse it. For compressed files guess_type names the inner type
+    # (.tar.gz -> application/x-tar), so those keep the default.
+    content_type, encoding = mimetypes.guess_type(target)
     with open(source, "rb") as f:
-        blob.upload_from_file(f, size=os.stat(source).st_size)
+        blob.upload_from_file(
+            f, size=os.stat(source).st_size, content_type=None if encoding else content_type
+        )
