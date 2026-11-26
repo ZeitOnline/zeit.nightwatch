@@ -168,16 +168,10 @@ def redact_url(url):
     return urllib.parse.urlunsplit(parts._replace(netloc=netloc))
 
 
-def redact_cookies(value, separator):
-    """Replaces each cookie value, keeping the cookie names for debugging.
-
-    `Cookie` separates cookies with `;`. In `Set-Cookie`, `;` separates the
-    attributes (kept as they are) and requests joins several headers with `,`.
-    The comma in `Expires=Wed, 21 Oct` is not followed by `name=`, so it
-    does not count as a cookie boundary.
-    """
-    pattern = r"(^|%s\s*)([^=;,\s]+)=[^;,]*" % separator
-    return re.sub(pattern, r"\1\2=" + REDACTED, value)
+def redact_cookie(cookie):
+    """Replaces the value of a `name=value` pair, keeping the name for debugging."""
+    name, _, _ = cookie.partition("=")
+    return "%s=%s" % (name.strip(), REDACTED)
 
 
 class HeaderPrintingSession(requests.Session):
@@ -187,25 +181,42 @@ class HeaderPrintingSession(requests.Session):
     """
 
     redact_headers = {"authorization", "proxy-authorization"}
-    redact_cookie_headers = {"cookie": ";", "set-cookie": ","}
 
     def request(self, method, url, *args, **kw):
         log.info("> %s %s", method.upper(), redact_url(url))
         response = super().request(method, url, *args, **kw)
         request = response.request
         lines = ["< %s %s" % (request.method, redact_url(request.url))]
-        lines.extend(["> %s: %s" % self._redact(*x) for x in request.headers.items()])
+        lines.extend(["> %s: %s" % (k, self._redact(k, v)) for k, v in request.headers.items()])
         lines.append("---")
-        resp = {"Status": response.status_code}
-        resp.update(response.headers)
-        lines.extend(["< %s: %s" % self._redact(*x) for x in resp.items()])
+        lines.append("< Status: %s" % response.status_code)
+        for name, value in response.headers.items():
+            if name.lower() == "set-cookie":
+                lines.extend(["< %s: %s" % (name, x) for x in self._redact_set_cookie(response)])
+            else:
+                lines.append("< %s: %s" % (name, self._redact(name, value)))
         log.info("\n".join(lines))
         log.info(response.text)
         return response
 
     def _redact(self, name, value):
         if name.lower() in self.redact_headers:
-            return (name, REDACTED)
-        if name.lower() in self.redact_cookie_headers:
-            return (name, redact_cookies(value, self.redact_cookie_headers[name.lower()]))
-        return (name, value)
+            return REDACTED
+        if name.lower() == "cookie":
+            # Cookies in a request header are separated by `;` only, values may
+            # contain commas.
+            return "; ".join(redact_cookie(x) for x in value.split(";"))
+        return value
+
+    def _redact_set_cookie(self, response):
+        # requests joins several Set-Cookie headers with `,`, which is ambiguous
+        # since values and `Expires` may contain commas, so we read them one by
+        # one from urllib3 instead.
+        getlist = getattr(getattr(response.raw, "headers", None), "getlist", None)
+        if getlist is None:
+            return [REDACTED]
+        result = []
+        for header in getlist("set-cookie"):
+            cookie, sep, attributes = header.partition(";")
+            result.append(redact_cookie(cookie) + sep + attributes)
+        return result

@@ -31,3 +31,24 @@ def test_logs_no_credentials(http, caplog):
     assert "> Authorization: <redacted>" in caplog.text
     assert "< set-cookie: session=<redacted>; " in caplog.text
     assert "> Cookie: session=<redacted>" in caplog.text
+
+
+def test_logs_no_cookie_values(http, caplog):
+    # Cookie values may contain commas and the name may be followed by spaces.
+    http.session.cookies.set("session", '"public,private-secret"', domain="httpbin.org")
+    http.session.cookies.set("other", "prefix,tail-secret", domain="httpbin.org")
+    http.get("/status/200")
+    assert "secret" not in caplog.text
+    assert "session=<redacted>" in caplog.text
+    assert "other=<redacted>" in caplog.text
+
+
+def test_logs_no_set_cookie_values(http, caplog):
+    http.get(
+        "/response-headers",
+        params=[("Set-Cookie", "a =public,a-secret; Path=/"), ("Set-Cookie", "b=b-secret")],
+    )
+    headers = [x for x in caplog.text.splitlines() if x.startswith("< ")]
+    assert "< set-cookie: a=<redacted>; Path=/" in headers
+    assert "< set-cookie: b=<redacted>" in headers
+    assert "secret" not in "\n".join(x for x in headers if "/response-headers" not in x)
