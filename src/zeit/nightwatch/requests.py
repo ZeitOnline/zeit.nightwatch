@@ -1,5 +1,6 @@
 import logging
 import re
+import urllib.parse
 
 from mechanicalsoup.stateful_browser import _BrowserState
 import bs4
@@ -155,19 +156,56 @@ class LazySoupBrowserState(_BrowserState):
         pass
 
 
+REDACTED = "<redacted>"
+
+
+def redact_url(url):
+    """Replaces the password in `https://user:password@host` URLs."""
+    parts = urllib.parse.urlsplit(url)
+    if parts.password is None:
+        return url
+    netloc = "%s:%s@%s" % (parts.username, REDACTED, parts.netloc.rpartition("@")[2])
+    return urllib.parse.urlunsplit(parts._replace(netloc=netloc))
+
+
+def redact_cookies(value, separator):
+    """Replaces each cookie value, keeping the cookie names for debugging.
+
+    `Cookie` separates cookies with `;`. In `Set-Cookie`, `;` separates the
+    attributes (kept as they are) and requests joins several headers with `,`.
+    The comma in `Expires=Wed, 21 Oct` is not followed by `name=`, so it
+    does not count as a cookie boundary.
+    """
+    pattern = r"(^|%s\s*)([^=;,\s]+)=[^;,]*" % separator
+    return re.sub(pattern, r"\1\2=" + REDACTED, value)
+
+
 class HeaderPrintingSession(requests.Session):
-    """Prints request+response headers, to help understanding test failures."""
+    """Prints request+response headers, to help understanding test failures.
+
+    Credentials are redacted, since the output ends up in log storage.
+    """
+
+    redact_headers = {"authorization", "proxy-authorization"}
+    redact_cookie_headers = {"cookie": ";", "set-cookie": ","}
 
     def request(self, method, url, *args, **kw):
-        log.info("> %s %s", method.upper(), url)
+        log.info("> %s %s", method.upper(), redact_url(url))
         response = super().request(method, url, *args, **kw)
         request = response.request
-        lines = ["< %s %s" % (request.method, request.url)]
-        lines.extend(["> %s: %s" % x for x in request.headers.items()])
+        lines = ["< %s %s" % (request.method, redact_url(request.url))]
+        lines.extend(["> %s: %s" % self._redact(*x) for x in request.headers.items()])
         lines.append("---")
         resp = {"Status": response.status_code}
         resp.update(response.headers)
-        lines.extend(["< %s: %s" % x for x in resp.items()])
+        lines.extend(["< %s: %s" % self._redact(*x) for x in resp.items()])
         log.info("\n".join(lines))
         log.info(response.text)
         return response
+
+    def _redact(self, name, value):
+        if name.lower() in self.redact_headers:
+            return (name, REDACTED)
+        if name.lower() in self.redact_cookie_headers:
+            return (name, redact_cookies(value, self.redact_cookie_headers[name.lower()]))
+        return (name, value)
