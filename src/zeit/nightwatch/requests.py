@@ -1,5 +1,6 @@
 import logging
 import re
+import urllib.parse
 
 from mechanicalsoup.stateful_browser import _BrowserState
 import bs4
@@ -155,19 +156,67 @@ class LazySoupBrowserState(_BrowserState):
         pass
 
 
+REDACTED = "<redacted>"
+
+
+def redact_url(url):
+    """Replaces the password in `https://user:password@host` URLs."""
+    parts = urllib.parse.urlsplit(url)
+    if parts.password is None:
+        return url
+    netloc = "%s:%s@%s" % (parts.username, REDACTED, parts.netloc.rpartition("@")[2])
+    return urllib.parse.urlunsplit(parts._replace(netloc=netloc))
+
+
+def redact_cookie(cookie):
+    """Replaces the value of a `name=value` pair, keeping the name for debugging."""
+    name, _, _ = cookie.partition("=")
+    return "%s=%s" % (name.strip(), REDACTED)
+
+
 class HeaderPrintingSession(requests.Session):
-    """Prints request+response headers, to help understanding test failures."""
+    """Prints request+response headers, to help understanding test failures.
+
+    Credentials are redacted, since the output ends up in log storage.
+    """
+
+    redact_headers = {"authorization", "proxy-authorization"}
 
     def request(self, method, url, *args, **kw):
-        log.info("> %s %s", method.upper(), url)
+        log.info("> %s %s", method.upper(), redact_url(url))
         response = super().request(method, url, *args, **kw)
         request = response.request
-        lines = ["< %s %s" % (request.method, request.url)]
-        lines.extend(["> %s: %s" % x for x in request.headers.items()])
+        lines = ["< %s %s" % (request.method, redact_url(request.url))]
+        lines.extend(["> %s: %s" % (k, self._redact(k, v)) for k, v in request.headers.items()])
         lines.append("---")
-        resp = {"Status": response.status_code}
-        resp.update(response.headers)
-        lines.extend(["< %s: %s" % x for x in resp.items()])
+        lines.append("< Status: %s" % response.status_code)
+        for name, value in response.headers.items():
+            if name.lower() == "set-cookie":
+                lines.extend(["< %s: %s" % (name, x) for x in self._redact_set_cookie(response)])
+            else:
+                lines.append("< %s: %s" % (name, self._redact(name, value)))
         log.info("\n".join(lines))
         log.info(response.text)
         return response
+
+    def _redact(self, name, value):
+        if name.lower() in self.redact_headers:
+            return REDACTED
+        if name.lower() == "cookie":
+            # Cookies in a request header are separated by `;` only, values may
+            # contain commas.
+            return "; ".join(redact_cookie(x) for x in value.split(";"))
+        return value
+
+    def _redact_set_cookie(self, response):
+        # requests joins several Set-Cookie headers with `,`, which is ambiguous
+        # since values and `Expires` may contain commas, so we read them one by
+        # one from urllib3 instead.
+        getlist = getattr(getattr(response.raw, "headers", None), "getlist", None)
+        if getlist is None:
+            return [REDACTED]
+        result = []
+        for header in getlist("set-cookie"):
+            cookie, sep, attributes = header.partition(";")
+            result.append(redact_cookie(cookie) + sep + attributes)
+        return result
